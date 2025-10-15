@@ -46,16 +46,16 @@ const BlackoutPoetry: React.FC<BlackoutProps> = ({
         action = "ADD";
       }
 
-      const newSnapshot: PoemSnapshot = {
-        action,
-        index,
-        timestamp: new Date(),
-      };
-
-      setPoemSnapshots((prevSnapshots) => [...prevSnapshots, newSnapshot]);
-
       return newIndexes;
     });
+
+    const newSnapshot: PoemSnapshot = {
+      action: selectedWordIndexes.includes(index) ? "REMOVE" : "ADD",
+      index,
+      timestamp: new Date(),
+    };
+
+    setPoemSnapshots((prevSnapshots) => [...prevSnapshots, newSnapshot]);
   };
 
   const resetSelection = () => {
