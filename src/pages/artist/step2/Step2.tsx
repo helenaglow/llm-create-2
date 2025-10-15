@@ -41,6 +41,7 @@ const ArtistStep2 = () => {
   const onComplete = useCallback(() => {
     artistPoem.writeConversation = writeMessagesRef.current || [];
     artistPoem.text = selectedWordIndexesRef.current;
+    artistPoem.poemSnapshot = poemSnapshotsRef.current;
     artistPoem.writeNotes = writeNotesRef.current || "";
 
     addRoleSpecificData({
@@ -53,10 +54,8 @@ const ArtistStep2 = () => {
   useEffect(() => {
     writeMessagesRef.current = writeMessages;
     selectedWordIndexesRef.current = selectedWordIndexes;
-    writeNotesRef.current = writeNotes;
     poemSnapshotsRef.current = poemSnapshots;
-
-    console.log(poemSnapshotsRef.current);
+    writeNotesRef.current = writeNotes;
   }, [writeMessages, writeNotes, selectedWordIndexes, poemSnapshots]);
 
   return (
