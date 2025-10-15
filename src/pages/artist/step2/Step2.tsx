@@ -55,6 +55,8 @@ const ArtistStep2 = () => {
     selectedWordIndexesRef.current = selectedWordIndexes;
     writeNotesRef.current = writeNotes;
     poemSnapshotsRef.current = poemSnapshots;
+
+    console.log(poemSnapshotsRef.current);
   }, [writeMessages, writeNotes, selectedWordIndexes, poemSnapshots]);
 
   return (

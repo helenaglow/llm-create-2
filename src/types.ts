@@ -156,7 +156,11 @@ export type UserData =
   | { role: "artist"; data: Artist }
   | { role: "audience"; data: Audience };
 
-export type PoemSnapshot = { indexes: number[]; timestamp: Date };
+export type PoemSnapshot = {
+  action: "ADD" | "REMOVE";
+  index: number;
+  timestamp: Date;
+};
 
 export interface SurveyQuestion {
   id: string;
