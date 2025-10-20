@@ -32,6 +32,7 @@ export default function ChatTab({
   const [input, setInput] = useState("");
   // const [lastResponseId] = useState<string | null>(null);
   const [markdownOutput, setMarkdownOutput] = useState("");
+  const [hasUsedFirstPrompt, setHasUsedFirstPrompt] = useState(false);
 
   const systemMessage = useMemo(() => {
     const words = passage.split(/\s+/);
@@ -53,6 +54,12 @@ export default function ChatTab({
     };
   }, [selectedWordIndexes]);
 
+  const promptSuggestions = [
+    "How to write a blackout poem",
+    "What emotions are conveyed in this text",
+    "What themes appear in this text",
+  ];
+
   const openingMessage = {
     role: Role.LLM,
     content:
@@ -68,13 +75,20 @@ export default function ChatTab({
     }
   }, [messages, isLLMLoading]);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+  const handlePromptSelection = (prompt: string) => {
+    setInput(prompt);
+    setHasUsedFirstPrompt(true);
+    sendMessage(prompt);
+  };
+
+  const sendMessage = async (messageContent?: string) => {
+    const content = messageContent || input;
+    if (!content.trim()) return;
 
     const artistMessage: Message = {
       id: nanoid(),
       role: Role.ARTIST,
-      content: input,
+      content: content,
       timestamp: new Date(),
     };
 
@@ -88,7 +102,7 @@ export default function ChatTab({
       systemMessage,
       openingMessage,
       ...strippedMessages,
-      { role: Role.ARTIST, content: input },
+      { role: Role.ARTIST, content: content },
     ];
 
     try {
@@ -175,6 +189,24 @@ export default function ChatTab({
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[]}
           />
+
+          {/* Show prompt suggestions only if no messages have been sent yet */}
+          {messages.length === 0 && !hasUsedFirstPrompt && (
+            <div className="mt-4 space-y-2">
+              <p className="text-sm text-gray-600 mb-3">Try asking me:</p>
+              <div className="flex flex-wrap gap-2">
+                {promptSuggestions.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handlePromptSelection(prompt)}
+                    className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-300 transition-colors duration-200 text-left"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {messages.map((msg) => (
