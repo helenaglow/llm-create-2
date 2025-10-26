@@ -70,14 +70,6 @@ export const ArtistPreSurveyQuestions: SurveyDefinition = {
           labels: { min: "Very slightly or not at all", max: "Extremely" },
           required: true,
         },
-      ],
-    },
-    {
-      id: "section3",
-      title: "PANAS-SF Pre-Survey Part.2 ",
-      description:
-        "For the following emotions, indicate the extent you to which feel them at the moment.",
-      questions: [
         {
           id: "q8",
           type: "likertScale",
@@ -115,14 +107,6 @@ export const ArtistPreSurveyQuestions: SurveyDefinition = {
           labels: { min: "Very slightly or not at all", max: "Extremely" },
           required: true,
         },
-      ],
-    },
-    {
-      id: "section3",
-      title: "PANAS-SF Pre-Survey Part.1 ",
-      description:
-        "For the following emotions, indicate the extent you to which feel them at the moment.",
-      questions: [
         {
           id: "q12",
           type: "likertScale",
@@ -207,14 +191,6 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
           labels: { min: "Very slightly or not at all", max: "Extremely" },
           required: true,
         },
-      ],
-    },
-    {
-      id: "section3",
-      title: "PANAS-SF Pre-Survey Part.2 ",
-      description:
-        "For the following emotions, indicate the extent you to which feel them at the moment.",
-      questions: [
         {
           id: "q6",
           type: "likertScale",
@@ -252,14 +228,6 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
           labels: { min: "Very slightly or not at all", max: "Extremely" },
           required: true,
         },
-      ],
-    },
-    {
-      id: "section4",
-      title: "PANAS-SF Pre-Survey Part.1 ",
-      description:
-        "For the following emotions, indicate the extent you to which feel them at the moment. at the moment.",
-      questions: [
         {
           id: "q10",
           type: "likertScale",

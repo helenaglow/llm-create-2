@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { DataContext } from "../../App";
 import { ArtistPreSurveyQuestions } from "../../consts/surveyQuestions";
 import Survey from "../../components/survey/survey";
+import SurveyScroll from "../../components/survey/surveyScroll";
 
 const AristPreSurvey = () => {
   const navigate = useNavigate();
@@ -32,11 +33,10 @@ const AristPreSurvey = () => {
 
   return (
     <HalfPageTemplate
-      title="Pre-survey"
-      description="Please fill out the following survey before we begin!"
+      description="Please fill out the following questions before we begin!"
       background="bg5"
     >
-      <Survey survey={ArtistPreSurveyQuestions} onSubmit={handleSubmit} />
+      <SurveyScroll survey={ArtistPreSurveyQuestions} onSubmit={handleSubmit} />
     </HalfPageTemplate>
   );
 };

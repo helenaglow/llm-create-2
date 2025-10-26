@@ -42,7 +42,7 @@ const ArtistStep1 = () => {
       poem: artistPoem,
       timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
     });
-    navigate("/artist/step-2");
+    navigate("/artist/blackout");
   }, []);
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const ArtistStep1 = () => {
     <MultiPageTemplate
       title="Step 1: Brainstorm"
       description="This is your time to familiarize yourself with the text and brainstorm for your poem. Feel free to take notes of your ideas. Your notes will be accessible during the writing portion."
-      duration={300}
+      duration={30}
       afterDuration={onComplete}
       llmAccess={userType == "TOTAL_ACCESS" || userType == "SPARK"}
       stage={Stage.SPARK}
