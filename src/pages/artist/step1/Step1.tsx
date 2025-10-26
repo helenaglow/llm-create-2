@@ -29,6 +29,7 @@ const ArtistStep1 = () => {
   let artistPoem: Poem = {
     passageId: "",
     text: [],
+    poemSnapshot: [],
     sparkConversation: [],
     writeConversation: [],
     sparkNotes: "",
@@ -54,7 +55,7 @@ const ArtistStep1 = () => {
     <MultiPageTemplate
       title="Step 1: Brainstorm"
       description="This is your time to familiarize yourself with the text and brainstorm for your poem. Feel free to take notes of your ideas. Your notes will be accessible during the writing portion."
-      duration={300}
+      duration={3}
       afterDuration={onComplete}
       llmAccess={userType == "TOTAL_ACCESS" || userType == "SPARK"}
       stage={Stage.SPARK}

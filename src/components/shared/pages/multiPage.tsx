@@ -22,6 +22,8 @@ interface PageTemplateProps {
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   notes: string;
   setNotes: React.Dispatch<React.SetStateAction<string>>;
+
+  selectedWordIndexes?: number[];
 }
 
 interface Button {
@@ -41,6 +43,7 @@ function MultiPageTemplate({
   setMessages,
   notes,
   setNotes,
+  selectedWordIndexes,
 }: PageTemplateProps) {
   const [leftWidth, setLeftWidth] = useState(70); // %
   const [topHeight, setTopHeight] = useState(70); // %
@@ -172,6 +175,7 @@ function MultiPageTemplate({
                 messages={messages}
                 setMessages={setMessages}
                 stage={stage}
+                selectedWordIndexes={selectedWordIndexes}
               />
             </div>
           </>
