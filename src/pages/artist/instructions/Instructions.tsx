@@ -2,12 +2,21 @@ import { Collapsible, Icon, Image } from "@chakra-ui/react";
 import PageTemplate from "../../../components/shared/pages/page";
 import { useNavigate } from "react-router-dom";
 import { MdInfoOutline } from "react-icons/md";
-// import { MdOutlineAccessTime } from "react-icons/md";
 import BlackoutExample1 from "../../../assets/blackout1.png";
 import BlackoutExample2 from "../../../assets/blackout2.png";
+import { useContext } from "react";
+import { DataContext } from "../../../App";
 
 const ArtistInstructions = () => {
   const navigate = useNavigate();
+  const context = useContext(DataContext);
+
+  if (!context) {
+    throw new Error("Component must be used within a DataContext.Provider");
+  }
+
+  const { userData } = context;
+  const condition = userData?.data.condition;
 
   const handleSubmit = () => {
     navigate("/artist/step-1");
@@ -21,15 +30,15 @@ const ArtistInstructions = () => {
     >
       <div className="w-full h-full flex-col space-y-6">
         <div className="text-main mb-2">
-          The goal of this experiment is for you to{" "}
-          <strong>write a blackout poem.</strong>{" "}
+          In this study, you will be introduced to blackout poetry and write
+          your own poem!
           <Collapsible.Root unmountOnExit>
             <Collapsible.Trigger className="text-main underline italic text-light-grey-1 pt-2">
               <div className="flex flex-row items-center space-x-2">
                 <Icon className="w-4 h-4 fill-light-grey-1">
                   <MdInfoOutline />
                 </Icon>
-                <p>What is a blackout poem?</p>
+                <p>Click here for more information on blackout poetry</p>
               </div>
             </Collapsible.Trigger>
             <Collapsible.Content>
@@ -63,24 +72,27 @@ const ArtistInstructions = () => {
           <p className="text-main mb-2">The task involves two steps:</p>
           <ul className="list-disc mb-4 pl-6 space-y-4">
             <li className="text-main">
-              <strong>Step 1: Brainstorm (5 minutes)</strong>
-              {/* <div className="flex flex-row items-center space-x-2">
-                        <Icon className="w-4 h-4 fill-grey">
-                            <MdOutlineAccessTime />
-                        </Icon>
-                        <p className="text-main text-grey">5 minutes</p>
-                    </div>  */}
+              <strong>
+                Step 1: Familiarize yourself with the text (1-3 minutes)
+              </strong>
               <p className="text-main">
                 You’ll be given a piece of text to read. For now, don’t start
                 writing your poem yet. This is just your time to get to know the
-                text, think about it, and let ideas start forming.
+                text, think about it, and let ideas start forming.{" "}
+                {(condition === "SPARK" || condition === "TOTAL_ACCESS") &&
+                  "You will also be guided with a blackout poetry assistant."}
               </p>
             </li>
             <li className="text-main">
-              <strong>Step 2: Blackout (No time limit)</strong>
+              <strong>Step 2: Write your poem (3-5 minutes)</strong>
               <p className="text-main">
                 You will make your blackout poem by selecting words from the
-                text.
+                text
+                {(condition === "CONTROL" || condition === "SPARK") && "."}{" "}
+                {(condition === "SPARK" || condition === "TOTAL_ACCESS") &&
+                  "with the guidance of a blackout poetry assistant."}{" "}
+                We are not rating your performance, so please do not use
+                external resources such as ChatGPT.
               </p>
             </li>
           </ul>
