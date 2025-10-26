@@ -29,6 +29,7 @@ const ArtistStep1 = () => {
   let artistPoem: Poem = {
     passageId: "",
     text: [],
+    poemSnapshot: [],
     sparkConversation: [],
     writeConversation: [],
     sparkNotes: "",
