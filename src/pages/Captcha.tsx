@@ -87,6 +87,7 @@ const Captcha = () => {
         writeConversation: [],
         sparkNotes: "",
         writeNotes: "",
+        poemSnapshot: [],
       };
       artistPoem.sparkConversation = [];
       artistPoem.sparkNotes = "";

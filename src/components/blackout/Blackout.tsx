@@ -34,16 +34,13 @@ const BlackoutPoetry: React.FC<BlackoutProps> = ({
   const toggleSelect = (index: number) => {
     setSelectedWordIndexes((prev) => {
       let newIndexes: number[];
-      let action: "ADD" | "REMOVE";
 
       if (prev.includes(index)) {
         // Remove index
         newIndexes = prev.filter((i) => i !== index);
-        action = "REMOVE";
       } else {
         // Add index
         newIndexes = [...prev, index];
-        action = "ADD";
       }
 
       return newIndexes;
