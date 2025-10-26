@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { MdInfoOutline } from "react-icons/md";
 import BlackoutExample1 from "../../../assets/blackout1.png";
 import BlackoutExample2 from "../../../assets/blackout2.png";
+import CheatIcon from "../../../assets/cheat-icon.png";
 import { useContext } from "react";
 import { DataContext } from "../../../App";
 
@@ -26,7 +27,7 @@ const ArtistInstructions = () => {
     <PageTemplate
       title="Your Task"
       background="bg2"
-      nextButton={{ text: "Next", action: handleSubmit }}
+      nextButton={{ text: "Begin step 1", action: handleSubmit }}
     >
       <div className="w-full h-full flex-col space-y-6">
         <div className="text-main mb-2">
@@ -70,11 +71,9 @@ const ArtistInstructions = () => {
         </div>
         <div>
           <p className="text-main mb-2">The task involves two steps:</p>
-          <ul className="list-disc mb-4 pl-6 space-y-4">
+          <ul className="list-decimal mb-4 pl-6 space-y-4">
             <li className="text-main">
-              <strong>
-                Step 1: Familiarize yourself with the text (1-3 minutes)
-              </strong>
+              <strong>Familiarize yourself with the text (1-3 minutes)</strong>
               <p className="text-main">
                 You’ll be given a piece of text to read. For now, don’t start
                 writing your poem yet. This is just your time to get to know the
@@ -84,18 +83,24 @@ const ArtistInstructions = () => {
               </p>
             </li>
             <li className="text-main">
-              <strong>Step 2: Write your poem (3-5 minutes)</strong>
+              <strong>Write your poem (3-5 minutes)</strong>
               <p className="text-main">
                 You will make your blackout poem by selecting words from the
                 text
                 {(condition === "CONTROL" || condition === "SPARK") && "."}{" "}
                 {(condition === "SPARK" || condition === "TOTAL_ACCESS") &&
-                  "with the guidance of a blackout poetry assistant."}{" "}
-                We are not rating your performance, so please do not use
-                external resources such as ChatGPT.
+                  "with the guidance of a blackout poetry assistant."}
               </p>
             </li>
           </ul>
+          <div className="w-1/2 h-max p-4 mt-4 border rounded-lg border-light-grey-2 flex items-center gap-4">
+            <Image alt="Cheat icon" src={CheatIcon} className="w-12" />
+            <p className="text-main mb-0">
+              Important: please do not take screenshots, copy text, or consult
+              external tools such as ChatGPT. We're interested in your best
+              effort and what you learn.
+            </p>
+          </div>
         </div>
       </div>
     </PageTemplate>
