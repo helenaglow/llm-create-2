@@ -60,8 +60,8 @@ const ArtistStep1 = () => {
     <MultiPageTemplate
       title="Step 1: Familiarize yourself with the text"
       description="This is your time to familiarize yourself with the text and brainstorm for your poem. Feel free to take any notes in the text box below. Your notes will be accessible during the writing portion."
-      duration={60} // in seconds
-      autoRedirectDuration={2000} // in milliseconds
+      duration={60}
+      autoRedirectDuration={120}
       afterDuration={onComplete}
       buttonText="Begin Writing"
       llmAccess={userType == "TOTAL_ACCESS" || userType == "SPARK"}

@@ -50,7 +50,6 @@ function MultiPageTemplate({
   const [topHeight, setTopHeight] = useState(70); // %
   const [isTimeUp, setIsTimeUp] = useState(false);
   const autoRedirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  //   const [isChatOpen, setIsChatOpen] = useState(false); // mobile toggle
 
   const isDraggingX = useRef(false);
   const isDraggingY = useRef(false);
@@ -109,12 +108,12 @@ function MultiPageTemplate({
 
   // timer for showing the continue button
   useEffect(() => {
-    if (duration && !isTimeUp) {
+    if (duration && !isTimeUp && autoRedirectDuration) {
       const timeout = setTimeout(() => {
         setIsTimeUp(true);
         autoRedirectTimeoutRef.current = setTimeout(() => {
           if (afterDuration) afterDuration();
-        }, autoRedirectDuration);
+        }, autoRedirectDuration * 1000);
       }, duration * 1000);
 
       return () => {
