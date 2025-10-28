@@ -151,7 +151,7 @@ function MultiPageTemplate({
   };
 
   const filledGradient = {
-    background: `linear-gradient(to right, #242424 ${progress}%, rgba(0,0,0,0.1) ${progress}%)`,
+    background: `linear-gradient(to right, #2F2F2F ${progress}%, #B3B3B3 ${progress}%)`,
     color: "white",
     transition: "background 0.3s ease",
   };
