@@ -89,13 +89,13 @@ export default function ChatTab({
   };
 
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTo({
-        top: chatContainerRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [messages, isLLMLoading]);
+    const element = chatContainerRef.current;
+    if (!element) return;
+
+    requestAnimationFrame(() => {
+      element.scrollTo({ top: element.scrollHeight, behavior: "auto" });
+    });
+  }, [messages, markdownOutput]);
 
   const handlePromptSelection = (prompt: string) => {
     setInput(prompt);
