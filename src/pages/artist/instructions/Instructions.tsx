@@ -52,7 +52,7 @@ const ArtistInstructions = () => {
                   <strong>blacking out words</strong> from an existing piece of
                   text <strong>to create a new poem</strong>.
                 </p>
-                {/* <p className="text-main pt-1">
+                <p className="text-main pt-1">
                   Here are two examples of blackout poetry made using the same
                   piece of text:{" "}
                 </p>
@@ -67,7 +67,7 @@ const ArtistInstructions = () => {
                     src={BlackoutExample2}
                     className="w-32"
                   />
-                </div> */}
+                </div>
               </div>
             </Collapsible.Content>
           </Collapsible.Root>
