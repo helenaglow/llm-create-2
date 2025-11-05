@@ -49,8 +49,11 @@ function MultiPageTemplate({
   const [leftWidth, setLeftWidth] = useState(70); // %
   const [topHeight, setTopHeight] = useState(70); // %
   const [isTimeUp, setIsTimeUp] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
   const autoRedirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  //   const [isChatOpen, setIsChatOpen] = useState(false); // mobile toggle
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const isDraggingX = useRef(false);
   const isDraggingY = useRef(false);
@@ -107,20 +110,41 @@ function MultiPageTemplate({
     };
   }, []);
 
+  const startFadeOut = () => {
+    setIsVisible(false);
+    setTimeout(() => afterDuration?.(), 500); // matches CSS duration
+  };
+
+  useEffect(() => {
+    // fade in on mount
+    const t = setTimeout(() => setIsVisible(true), 50);
+    return () => clearTimeout(t);
+  }, []);
+
   // timer for showing the continue button
   useEffect(() => {
-    if (duration && !isTimeUp) {
-      const timeout = setTimeout(() => {
-        setIsTimeUp(true);
-        autoRedirectTimeoutRef.current = setTimeout(() => {
-          if (afterDuration) afterDuration();
-        }, autoRedirectDuration);
-      }, duration * 1000);
+    if (duration && !isTimeUp && autoRedirectDuration) {
+      const startTime = Date.now();
 
-      return () => {
-        clearTimeout(timeout);
-      };
+      timerRef.current = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        const percentageElapsed = Math.min((elapsed / duration) * 100, 100);
+        setProgress(percentageElapsed);
+
+        if (percentageElapsed >= 100) {
+          setIsTimeUp(true);
+          clearInterval(timerRef.current!);
+
+          autoRedirectTimeoutRef.current = setTimeout(() => {
+            startFadeOut();
+          }, autoRedirectDuration * 1000);
+        }
+      }, 100);
     }
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, [duration, isTimeUp, afterDuration, autoRedirectDuration]);
 
   // timer for auto-direct
@@ -136,13 +160,18 @@ function MultiPageTemplate({
     if (autoRedirectTimeoutRef.current) {
       clearTimeout(autoRedirectTimeoutRef.current);
     }
-    if (afterDuration) afterDuration();
+    startFadeOut();
   };
 
   return (
     <div className="w-full h-full min-w-96 overflow-hidden">
-      {/* Desktop Layout */}
-      <div className="flex h-full w-full">
+      <div
+        className={`flex h-full w-full transform transition-all duration-1000 ${
+          isVisible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
+      >
         {/* Left Panel */}
         <div
           className="flex flex-col w-full h-full bg-white"
@@ -164,6 +193,9 @@ function MultiPageTemplate({
                   } font-sans`}
                   onClick={handleContinueClick}
                   disabled={!isTimeUp}
+                  style={{
+                    background: `linear-gradient(to right, #2F2F2F ${progress}%, #B3B3B3 ${progress}%)`,
+                  }}
                 >
                   {buttonText}
                 </Button>
