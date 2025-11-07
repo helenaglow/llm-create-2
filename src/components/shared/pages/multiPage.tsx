@@ -207,14 +207,10 @@ function MultiPageTemplate({
             style={{ height: `${topHeight}%` }}
           >
             <div className="w-full h-max space-y-4">
-              <div className="w-full flex justify-between items-start text-h1">
-                <div className="flex flex-col flex-1 pr-8">
-                  <p className="text-h1">{title}</p>
-                  <p className="text-sm text-grey font-sans mt-2">
-                    {description}
-                  </p>
-                </div>
-
+              <div
+                className={`w-full h-max flex text-h1 justify-between items-center flex-row text-h1`}
+              >
+                <p>{title}</p>
                 <div className="flex flex-col items-center justify-center min-w-[10rem]">
                   <Button
                     className={`btn-small px-4 text-center ${
@@ -229,15 +225,23 @@ function MultiPageTemplate({
                     {buttonText}
                   </Button>
 
-                  {isTimeUp && countdown !== null && (
-                    <p
-                      className={`text-xs text-gray-500 mt-2 text-center transition-all duration-700 ease-out
-                      ${showCountdownVisible ? "opacity-100" : "opacity-0"}`}
-                    >
-                      Your next step starts in {formatTime(countdown)}
-                    </p>
-                  )}
+                  <div className="h-4 mt-2 flex items-center justify-center">
+                    {isTimeUp && countdown !== null && (
+                      <p
+                        className={`text-xs text-gray-500 text-center transition-opacity duration-700 ease-out
+                        ${showCountdownVisible ? "opacity-100" : "opacity-0"}`}
+                      >
+                        Your next step starts in {formatTime(countdown)}
+                      </p>
+                    )}
+                  </div>
                 </div>
+              </div>
+
+              <div
+                className={`w-full h-max flex text-left text-sm font-sans text-grey`}
+              >
+                <p>{description}</p>
               </div>
 
               <div className={`w-full flex overflow-auto py-4 h-max`}>
