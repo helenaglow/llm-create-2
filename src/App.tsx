@@ -280,7 +280,7 @@ function App() {
                     path="/artist/assistant-instructions"
                     element={<LLMInstruction />}
                   />
-                  <Route path="/thank-you" element={<ThankYou />} />
+                  <Route path="/artist/thank-you" element={<ThankYou />} />
                 </>
               )}
 

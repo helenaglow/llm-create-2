@@ -81,7 +81,7 @@ const ArtistPostSurvey = () => {
         type: "success",
         duration: 5000,
       });
-      navigate("/thank-you");
+      navigate("/artist/thank-you");
     } catch (error) {
       console.error("Error saving data:", error);
       toaster.create({
