@@ -48,7 +48,7 @@ const ArtistStep2 = () => {
       poem: artistPoem,
       timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
     });
-    navigate("/artist/final-poem");
+    navigate("/artist/post-survey");
   }, [addRoleSpecificData, userData?.data?.timeStamps, navigate]);
 
   useEffect(() => {
@@ -68,6 +68,7 @@ const ArtistStep2 = () => {
       buttonText="Submit"
       llmAccess={userType == "TOTAL_ACCESS" || userType == "WRITING"}
       stage={Stage.WRITE}
+      passage={artistPoem?.passage.text || ""}
       messages={writeMessages}
       setMessages={setWriteMessages}
       notes={writeNotes}

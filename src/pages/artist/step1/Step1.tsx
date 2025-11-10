@@ -68,6 +68,7 @@ const ArtistStep1 = () => {
       buttonText="Begin Writing"
       llmAccess={userType == "TOTAL_ACCESS" || userType == "SPARK"}
       stage={Stage.SPARK}
+      passage={passage.text}
       messages={sparkMessages}
       setMessages={setSparkMessages}
       notes={sparkNotes}

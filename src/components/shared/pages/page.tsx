@@ -96,7 +96,7 @@ function PageTemplate({
           <div
             className={
               `w-full overflow-y-auto py-4` +
-              (title ? ` h-[60vh]` : ` h-[50vh] md:h-[70vh]`)
+              (title ? ` h-[60vh]` : ` h-[70vh]`)
             }
           >
             {children}
