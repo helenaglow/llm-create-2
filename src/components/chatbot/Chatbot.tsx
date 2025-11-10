@@ -80,9 +80,7 @@ export default function ChatTab({
   const openingMessage = {
     role: Role.LLM,
     content:
-      stage == "SPARK"
-        ? "Hello! I'm your assistant for today. I am just ChatGPT, so feel free to use me just as you would in your day-to-day activities. I'm here to help you brainstorm, refine, or analyze blackout poetry as you create your own piece."
-        : "LLM During the Writing stage",
+      "Hello! I'm your assistant for today. I am just ChatGPT, so feel free to use me just as you would in your day-to-day activities. I'm here to help you brainstorm, refine, or analyze blackout poetry as you create your own piece.",
   };
 
   useEffect(() => {
