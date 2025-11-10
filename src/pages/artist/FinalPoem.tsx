@@ -39,7 +39,7 @@ const FinalPoem = () => {
       nextButton={{ text: "Let's wrap up", action: handleSubmit }}
       title=""
     >
-      <div className="w-full h-full flex-col content-center justify-items-center space-y-4">
+      <div className="w-full h-full flex-col content-center justify-items-center space-y-4 grid">
         <p className="text-h1-dark w-3xl text-left">Your Final Poem</p>
         <div className="max-w-3xl text-center leading-relaxed flex flex-wrap p-4 bg-white rounded-xl">
           {words.map((word, i) => {
