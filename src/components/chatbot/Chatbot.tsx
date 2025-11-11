@@ -72,9 +72,9 @@ export default function ChatTab({
   }, [selectedWordIndexes]);
 
   const promptSuggestions = [
-    "How to write a blackout poem",
-    "What emotions are conveyed in this text",
-    "What themes appear in this text",
+    "What themes or moods could I explore in my blackout poem?",
+    "Which words best capture the message I want to keep?",
+    "Can you help me find a starting point in this text?",
   ];
 
   const openingMessage = {
