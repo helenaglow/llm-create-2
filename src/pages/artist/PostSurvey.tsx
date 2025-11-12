@@ -37,6 +37,7 @@ const ArtistPostSurvey = () => {
     };
 
     const poemData = {
+      passageId: poem.passageId,
       text: poem.text,
       snapshot: poem.poemSnapshot,
       sparkConversation: poem.sparkConversation,
