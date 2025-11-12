@@ -552,12 +552,12 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
 
     {
       id: "section7",
-      title: "AI Assistnace",
+      title: "AI Assistance",
       questions: [
         {
           id: "q30",
           type: "multipleChoice",
-          question: "During the my usual writing process I feel like",
+          question: "During my usual writing process, I feel like",
           options: [
             "I write and artificial intelligence assists me",
             "artificial intelligence writes and I assist",
@@ -571,7 +571,7 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
 
     {
       id: "section7",
-      title: "AI Assistnace",
+      title: "AI Assistance",
       conditions: ["SPARK", "TOTAL_ACCESS", "WRITING"],
       questions: [
         {
