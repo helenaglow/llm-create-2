@@ -40,7 +40,7 @@ export const ArtistPreSurveyQuestions: SurveyDefinition = {
       id: "section2",
       title: "SPANE-B Pre-Survey Part.1 ",
       description:
-        "Please think about what you are doing and experiencing right now. Then report how much you experienced each of the following feelings, using the scale below.",
+        "Please reflect on your current, overall emotional state. Indicate the extent to which you are experiencing each of the following feelings using the scale below.",
       questions: [
         {
           id: "q3",
@@ -477,16 +477,11 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
           question:
             "How much control did you have over the creative decisions that shaped the final product?",
           options: [
-            { label: " ", value: 1 },
-            { label: " ", value: 2 },
-            { label: " ", value: 3 },
-            { label: " ", value: 4 },
-            { label: " ", value: 5 },
-            { label: " ", value: 6 },
-            { label: " ", value: 7 },
-            { label: " ", value: 8 },
-            { label: " ", value: 9 },
-            { label: " ", value: 10 },
+            { label: "None", value: 1 },
+            { label: "A little", value: 2 },
+            { label: "Some", value: 3 },
+            { label: "A lot", value: 4 },
+            { label: "A great deal", value: 5 }
           ],
           removeValues: true,
           required: true,
@@ -498,16 +493,11 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
           question:
             "How intentional were you about the creative decisions that you made?",
           options: [
-            { label: " ", value: 1 },
-            { label: " ", value: 2 },
-            { label: " ", value: 3 },
-            { label: " ", value: 4 },
-            { label: " ", value: 5 },
-            { label: " ", value: 6 },
-            { label: " ", value: 7 },
-            { label: " ", value: 8 },
-            { label: " ", value: 9 },
-            { label: " ", value: 10 },
+            { label: "Not at all", value: 1 },
+            { label: "Slightly", value: 2 },
+            { label: "Moderately", value: 3 },
+            { label: "Very", value: 4 },
+            { label: "Extremely", value: 5 }
           ],
           removeValues: true,
           doNotCollapse: true,
@@ -518,16 +508,11 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
           type: "likertScale",
           question: "How much mental effort did you put into this work?",
           options: [
-            { label: " ", value: 1 },
-            { label: " ", value: 2 },
-            { label: " ", value: 3 },
-            { label: " ", value: 4 },
-            { label: " ", value: 5 },
-            { label: " ", value: 6 },
-            { label: " ", value: 7 },
-            { label: " ", value: 8 },
-            { label: " ", value: 9 },
-            { label: " ", value: 10 },
+            { label: "None", value: 1 },
+            { label: "A little", value: 2 },
+            { label: "Some", value: 3 },
+            { label: "A lot", value: 4 },
+            { label: "A great deal", value: 5 }
           ],
           removeValues: true,
           doNotCollapse: true,
