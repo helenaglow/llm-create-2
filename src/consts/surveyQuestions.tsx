@@ -10,9 +10,15 @@ export const ArtistPreSurveyQuestions: SurveyDefinition = {
       questions: [
         {
           id: "q1",
-          type: "range",
-          question: "I am more creative than ____% of humans.",
-          labels: { min: "0%", max: "100%" },
+          type: "likertScale",
+          question: "I consider myself a creative person.",
+          options: [
+            { label: "Strongly Disagree", value: 1 },
+            { label: "Disagree", value: 2 },
+            { label: "Neutral", value: 3 },
+            { label: "Agree", value: 4 },
+            { label: "Strongly Agree", value: 5 },
+          ],
           required: true,
         },
         {
@@ -583,6 +589,7 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
             "I was writing the poem and the artificial intelligence was assisting me",
             "the artificial intelligence was writing the poem and I was assisting",
             "the artificial intelligence and I contributed to the poem equally",
+            "I did not use the artificial intelligence tool",
           ],
           required: true,
         },
