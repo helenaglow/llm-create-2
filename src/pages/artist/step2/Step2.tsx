@@ -36,8 +36,7 @@ const ArtistStep2 = () => {
   );
   const [selectedWordIndexes, setSelectedWordIndexes] = useState<number[]>([]);
   const [poemSnapshots, setPoemSnapshots] = useState<PoemSnapshot[]>([]);
-  const userType =
-    (userData as any)?.data?.condition || ("CONTROL" as ArtistCondition);
+  const userType = userData?.data.condition as ArtistCondition;
 
   const onComplete = useCallback(() => {
     artistPoem.writeConversation = writeMessagesRef.current || [];

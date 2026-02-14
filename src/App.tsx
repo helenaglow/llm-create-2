@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import "./index.css";
-// import Captcha from "./pages/Captcha";
+import Captcha from "./pages/Captcha";
 import ConsentForm from "./pages/ConsentForm";
-// import AristPreSurvey from "./pages/artist/PreSurvey";
+import AristPreSurvey from "./pages/artist/PreSurvey";
 import ArtistInstructions from "./pages/artist/instructions/Instructions";
 import ArtistTransitionStep1 from "./pages/artist/step1/TransitionStep1";
 import ArtistStep1 from "./pages/artist/step1/Step1";
@@ -16,10 +16,7 @@ import PoemViewer from "./pages/PoemViewer";
 import usePreventRefresh from "./components/shared/preventRefresh";
 import usePreventBack from "./components/shared/preventBackBttn";
 import { nanoid } from "nanoid";
-import AudiencePreSurvey from "./pages/audience/PreSurvey";
-import AudienceCaptcha from "./pages/audience/AudienceCaptcha";
-import AudiencePoems from "./pages/audience/step2/Step2";
-import AudienceRanking from "./pages/audience/step2/Step2Rank";
+
 // import AudienceInstructions from "./pages/audience/instructions/Instructions";
 // ================= AUDIENCE PAGES =================
 // import ChooseYourCharacter from "./pages/ChooseYourCharacter";
@@ -37,19 +34,10 @@ import type {
   Audience,
   ArtistSurvey,
   AudienceSurvey,
-  SurveyAnswers,
-  RankingData,
-  ReRankingData,
 } from "./types";
 import { Provider } from "./components/ui/provider";
 import { Toaster } from "./components/ui/toaster";
 import { globalSaveQueue } from "./utils/saveQueue";
-import AudienceInstructions from "./pages/audience/instructions/Instructions";
-import AudiencePassage from "./pages/audience/step1/Step1";
-import AudienceAI from "./pages/audience/step2/Step2AIDisclousure";
-import AudiencePostSurvey from "./pages/audience/PostSurvey";
-import AudienceReRanking from "./pages/audience/step2/Step2AI";
-import AudienceThankYou from "./pages/audience/ThankYou";
 
 interface DataContextValue {
   userData: UserData | null;
@@ -61,14 +49,6 @@ interface DataContextValue {
   addPostSurvey: (
     updates: Partial<ArtistSurvey> | Partial<AudienceSurvey>
   ) => void;
-  addPoemEvaluation: (
-    poemId: string,
-    answers: SurveyAnswers,
-    additionalData?: Partial<Audience>
-  ) => void;
-  addRankSurvey: (rankingData: RankingData) => void;
-  addAISurvey: (answers: SurveyAnswers) => void;
-  addReRankSurvey: (reRankingData: ReRankingData) => void;
   sessionId: string | null;
   flushSaves: () => Promise<void>;
 }
@@ -97,24 +77,16 @@ function App() {
     setSessionId(id);
   }, []);
 
-  const autoSave = (data: UserData | null) => {
+  const enqueueAutosave = (data: UserData | null) => {
     if (!data || !sessionId) return;
 
     if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
     saveTimerRef.current = window.setTimeout(async () => {
-      if (data.role === "artist") {
-        await fetch("/api/firebase/artist/autosave", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId, data }),
-        });
-      } else {
-        await fetch("/api/firebase/audience/autosave", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId, data }),
-        });
-      }
+      await fetch("/api/firebase/autosave", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, data }),
+      });
     }, 500);
   };
 
@@ -152,7 +124,7 @@ function App() {
           ...updates,
         },
       };
-      autoSave(next as UserData);
+      enqueueAutosave(next as UserData);
       return next;
     });
   };
@@ -182,7 +154,7 @@ function App() {
           },
         },
       };
-      autoSave(next as UserData);
+      enqueueAutosave(next as UserData);
       return next;
     });
   };
@@ -212,101 +184,7 @@ function App() {
           },
         },
       };
-      autoSave(next as UserData);
-      return next;
-    });
-  };
-
-  const addPoemEvaluation = (
-    poemId: string,
-    answers: SurveyAnswers,
-    additionalData?: Partial<Audience>
-  ) => {
-    setUserData((prev: any) => {
-      if (!prev || !prev.data) {
-        throw new Error(
-          "Tried to update poem evaluation when userData is null."
-        );
-      }
-
-      const poemAnswer = { poemId, ...answers };
-      const existingPoemAnswers = prev.data.surveyResponse?.poemAnswers ?? [];
-
-      const next = {
-        ...prev,
-        data: {
-          ...prev.data,
-          ...additionalData,
-          surveyResponse: {
-            ...prev.data.surveyResponse,
-            poemAnswers: [...existingPoemAnswers, poemAnswer],
-          },
-        },
-      };
-      autoSave(next as UserData);
-      return next;
-    });
-  };
-
-  const addRankSurvey = (rankingData: RankingData) => {
-    setUserData((prev: any) => {
-      if (!prev || !prev.data) {
-        throw new Error("Tried to update rank survey when userData is null.");
-      }
-
-      const next = {
-        ...prev,
-        data: {
-          ...prev.data,
-          surveyResponse: {
-            ...prev.data.surveyResponse,
-            rankingData,
-          },
-        },
-      };
-      autoSave(next as UserData);
-      return next;
-    });
-  };
-
-  const addAISurvey = (answers: SurveyAnswers) => {
-    setUserData((prev: any) => {
-      if (!prev || !prev.data) {
-        throw new Error("Tried to update AI survey when userData is null.");
-      }
-
-      const next = {
-        ...prev,
-        data: {
-          ...prev.data,
-          surveyResponse: {
-            ...prev.data.surveyResponse,
-            AIAnswers: answers,
-          },
-        },
-      };
-      autoSave(next as UserData);
-      return next;
-    });
-  };
-
-  const addReRankSurvey = (reRankingData: ReRankingData) => {
-    setUserData((prev: any) => {
-      if (!prev || !prev.data) {
-        throw new Error("Tried to update re-rank survey when userData is null.");
-      }
-
-      const next = {
-        ...prev,
-        data: {
-          ...prev.data,
-          surveyResponse: {
-            ...prev.data.surveyResponse,
-            reRankingData,
-          },
-        },
-      };
-      autoSave(next as UserData);
+      enqueueAutosave(next as UserData);
       return next;
     });
   };
@@ -341,10 +219,6 @@ function App() {
         addRoleSpecificData,
         addPostSurvey,
         addPreSurvey,
-        addPoemEvaluation,
-        addRankSurvey,
-        addAISurvey,
-        addReRankSurvey,
         sessionId,
         flushSaves,
       }}
@@ -354,45 +228,14 @@ function App() {
           <Toaster />
           <Router>
             <Routes>
-              {/* <Route path="/" element={<Captcha />} /> */}
-              <Route path="/" element={<AudienceCaptcha />} />
+              <Route path="/" element={<Captcha />} />
               <Route path="/consent" element={<ConsentForm />} />
               <Route path="/poem-viewer" element={<PoemViewer />} />
               {userData && (
                 <>
-                  {/* <Route
+                  <Route
                     path="/artist/pre-survey"
                     element={<AristPreSurvey />}
-                  /> */}
-                  <Route
-                    path="/audience/pre-survey"
-                    element={<AudiencePreSurvey />}
-                  />
-                  <Route
-                    path="/audience/instructions"
-                    element={<AudienceInstructions />}
-                  />
-                  <Route
-                    path="/audience/passage"
-                    element={<AudiencePassage />}
-                  />
-                  <Route path="/audience/poems" element={<AudiencePoems />} />
-                  <Route
-                    path="/audience/ranking"
-                    element={<AudienceRanking />}
-                  />
-                  <Route path="/audience/ai" element={<AudienceAI />} />
-                  <Route
-                    path="/audience/ai-disclosure"
-                    element={<AudienceReRanking />}
-                  />
-                  <Route
-                    path="/audience/post-survey"
-                    element={<AudiencePostSurvey />}
-                  />
-                  <Route
-                    path="/audience/thank-you"
-                    element={<AudienceThankYou />}
                   />
                   <Route
                     path="/artist/instructions"

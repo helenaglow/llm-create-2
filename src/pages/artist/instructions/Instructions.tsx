@@ -17,7 +17,7 @@ const ArtistInstructions = () => {
   }
 
   const { userData, addRoleSpecificData } = context;
-  const condition = (userData as any)?.data?.condition || "CONTROL";
+  const condition = userData?.data.condition;
 
   const handleSubmit = () => {
     addRoleSpecificData({
