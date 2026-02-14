@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 // ARTIST TYPES
 export interface Artist {
   condition: ArtistCondition;
@@ -13,12 +15,6 @@ export interface ArtistSurvey {
   postSurvey: SurveyDefinition;
   postAnswers: SurveyAnswers;
 }
-
-// export interface SurveyQuestion {
-//   id: string;
-//   q: string;
-//   answerType:
-// }
 
 export interface Poem {
   passageId: string; // passageId in Passage.id
@@ -68,9 +64,9 @@ export type Role = (typeof Role)[keyof typeof Role];
 
 // AUDIENCE TYPES
 export interface Audience {
-  condition: AudienceCondition;
+  passageId: string;
   surveyResponse: AudienceSurvey;
-  poemFeedback: PoemFeedback;
+  poemsViewed: string[];
   timeStamps: Date[];
 }
 
@@ -79,6 +75,11 @@ export interface AudienceSurvey {
   id: string;
   preSurvey: SurveyDefinition;
   preAnswers: SurveyAnswers;
+  poemSurvey: PoemSurveyDefinition[];
+  poemAnswers: PoemSurveyAnswers[];
+  rankingData: RankingData;
+  AIAnswers: SurveyAnswers;
+  reRankingData: ReRankingData;
   postSurvey: SurveyDefinition;
   postAnswers: SurveyAnswers;
 }
@@ -95,26 +96,22 @@ export interface Passage {
   text: string;
 }
 
-export const AudienceCondition = {
-  NO_KNOWLEDGE: "NO_KNOWLEDGE",
-  FULL_TRANSPARENCY: "FULL_TRANSPARENCY",
-} as const;
-export type AudienceCondition =
-  (typeof AudienceCondition)[keyof typeof AudienceCondition];
-
 export type QuestionType =
   | "multipleChoice"
   | "openEnded"
   | "likertScale"
   | "circularChoice"
   | "range"
-  | "topXRanking";
+  | "topXRanking"
+  | "dragRank"
+  | "selectAll";
 
 export interface BaseQuestion {
   id: string;
   type: QuestionType;
   question: string;
   required?: boolean;
+  children?: ReactNode;
   answer?: any;
 }
 
@@ -155,7 +152,9 @@ export type Question =
   | LikertScaleQuestion
   | CircularMultipleChoiceQuestion
   | RangeQuestion
-  | TopXRankingQuestion;
+  | TopXRankingQuestion
+  | DragRankQuestion
+  | SelectAllQuestion;
 
 export interface Section {
   id: string;
@@ -165,12 +164,41 @@ export interface Section {
   questions: Question[];
 }
 
-export type Condition = ArtistCondition | AudienceCondition | undefined;
+export type Condition = ArtistCondition | undefined;
 
 export interface SurveyDefinition {
   id: string;
   title: string;
   sections: Section[];
+}
+
+export interface PoemSurveyDefinition extends SurveyDefinition {}
+
+export interface PoemSurveyAnswers extends SurveyAnswers {
+  poemId: string;
+}
+
+// Ranking survey data structures
+export interface StatementMatch {
+  poemId: string;
+  isCorrect: boolean;
+  chosenStatement: string;
+  explanation?: string;
+}
+
+export interface PoemRankings {
+  favourite: string[]; // most liked to least liked
+  impact: string[]; // most emotionally impactful to least
+  creative: string[]; // most creative to least
+}
+
+export interface RankingData {
+  poemRankings: PoemRankings;
+  statementMatches: StatementMatch[];
+}
+
+export interface ReRankingData {
+  poemRankings: PoemRankings;
 }
 
 export type AnswerValue = string | string[] | number | null;
@@ -183,6 +211,39 @@ export interface TopXRankingQuestion extends BaseQuestion {
   type: "topXRanking";
   options: string[];
   maxSelectable: number; // maximum number of selectable options
+}
+
+export interface DragRankItem {
+  id: string;
+  title: string;
+  content?: ReactNode;
+}
+
+export interface SelectAllItem {
+  id: string;
+  title: string;
+  content?: ReactNode;
+}
+
+export interface SelectAllQuestion extends BaseQuestion {
+  type: "selectAll";
+
+  items: SelectAllItem[];
+  defaultExpanded?: string[];
+  minSelections?: number;
+  maxSelections?: number;
+}
+
+export interface DragRankQuestion extends BaseQuestion {
+  type: "dragRank";
+  items: DragRankItem[];
+  // Optional initial order of item ids. When provided it will be used
+  // as the initial order unless a controlled `value` is passed to the component.
+  initialOrder?: string[];
+  // Optional list of item ids that should be expanded by default.
+  defaultExpanded?: string[];
+  // Optional flag to enable/disable dragging UI for this question.
+  draggable?: boolean;
 }
 
 export type UserData =
