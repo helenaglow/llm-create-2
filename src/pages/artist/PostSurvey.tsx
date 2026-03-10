@@ -14,7 +14,7 @@ const ArtistPostSurvey = () => {
     throw new Error("Component must be used within a DataContext.Provider");
   }
 
-  const { userData, addPostSurvey, sessionId } = context;
+  const { userData, addPostSurvey, sessionId, isTestMode } = context;
 
   const navigate = useNavigate();
   const poemData = userData?.data && (userData.data as Artist).poem;
@@ -81,7 +81,42 @@ const ArtistPostSurvey = () => {
       postSurvey: ArtistPostSurveyQuestions,
       postAnswers: answers,
     });
-    submitDb(answers);
+
+    if (isTestMode) {
+      try {
+        const testData = {
+          ...userData,
+          data: {
+            ...userData?.data,
+            surveyResponse: {
+              ...(userData?.data as Artist).surveyResponse,
+              postSurvey: ArtistPostSurveyQuestions,
+              postAnswers: answers,
+            },
+          },
+        };
+        await fetch("/api/firebase/autosave", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId, data: testData }),
+        });
+        toaster.create({
+          description: "Test session saved (not committed to production).",
+          type: "success",
+          duration: 5000,
+        });
+        navigate("/artist/thank-you");
+      } catch (error) {
+        console.error("Error saving test data:", error);
+        toaster.create({
+          description: "There was an error saving. Please try again.",
+          type: "error",
+          duration: 5000,
+        });
+      }
+    } else {
+      submitDb(answers);
+    }
   };
 
   const filteredSurvey: SurveyDefinition = {
@@ -89,7 +124,7 @@ const ArtistPostSurvey = () => {
     sections: ArtistPostSurveyQuestions.sections.filter(
       (section) =>
         !section.conditions || // no conditions → always include
-        section.conditions.includes(userData?.data.condition)
+        section.conditions.includes(userData?.data.condition),
     ),
   };
 

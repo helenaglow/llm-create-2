@@ -44,13 +44,15 @@ interface DataContextValue {
   addUserData: (newData: Partial<UserData>) => void;
   addRoleSpecificData: (updates: Partial<Artist> | Partial<Audience>) => void;
   addPreSurvey: (
-    updates: Partial<ArtistSurvey> | Partial<AudienceSurvey>
+    updates: Partial<ArtistSurvey> | Partial<AudienceSurvey>,
   ) => void;
   addPostSurvey: (
-    updates: Partial<ArtistSurvey> | Partial<AudienceSurvey>
+    updates: Partial<ArtistSurvey> | Partial<AudienceSurvey>,
   ) => void;
   sessionId: string | null;
   flushSaves: () => Promise<void>;
+  isTestMode: boolean;
+  setIsTestMode: (value: boolean) => void;
 }
 
 export const DataContext = createContext<DataContextValue | null>(null);
@@ -58,13 +60,14 @@ export const DataContext = createContext<DataContextValue | null>(null);
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [isTestMode, setIsTestMode] = useState<boolean>(false);
   const saveTimerRef = useRef<number | null>(null);
 
   usePreventRefresh(
-    "To make sure your session counts, please avoid refreshing the page. Do you still want to refresh?"
+    "To make sure your session counts, please avoid refreshing the page. Do you still want to refresh?",
   );
   usePreventBack(
-    "To make sure your session counts, please avoid pressing the back button."
+    "To make sure your session counts, please avoid pressing the back button.",
   );
 
   // clear session storage and set the session ID on first render
@@ -108,12 +111,12 @@ function App() {
   };
 
   const addRoleSpecificData = (
-    updates: Partial<Artist> | Partial<Audience>
+    updates: Partial<Artist> | Partial<Audience>,
   ) => {
     setUserData((prev: any) => {
       if (!prev || !prev.data) {
         throw new Error(
-          "Tried to update data when userData is null or incomplete."
+          "Tried to update data when userData is null or incomplete.",
         );
       }
 
@@ -130,7 +133,7 @@ function App() {
   };
 
   const addPreSurvey = (
-    updates: Partial<ArtistSurvey> | Partial<AudienceSurvey>
+    updates: Partial<ArtistSurvey> | Partial<AudienceSurvey>,
   ) => {
     setUserData((prev: any) => {
       if (!prev || !prev.data) {
@@ -160,7 +163,7 @@ function App() {
   };
 
   const addPostSurvey = (
-    updates: Partial<ArtistSurvey> | Partial<AudienceSurvey>
+    updates: Partial<ArtistSurvey> | Partial<AudienceSurvey>,
   ) => {
     setUserData((prev: any) => {
       if (!prev || !prev.data) {
@@ -221,6 +224,8 @@ function App() {
         addPreSurvey,
         sessionId,
         flushSaves,
+        isTestMode,
+        setIsTestMode,
       }}
     >
       <Provider>
