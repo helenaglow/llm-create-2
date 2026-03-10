@@ -58,6 +58,7 @@ export default function ChatTab({
   const condition = userData?.data.condition;
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const systemMessageStage =
     condition === "SPARK"
@@ -108,7 +109,7 @@ export default function ChatTab({
     role: Role.LLM,
     content:
       stage === "SPARK"
-        ? "Hello! I am your blackout poetry assistant, here to help you brainstorm, refine, or analyze blackout poetry. Feel free to interact with me as you would any regular AI chatbot."
+        ? "Hello! I am your blackout poetry assistant, here to help you brainstorm, refine, or analyze your blackout poetry. Feel free to interact with me as you would any regular AI chatbot."
         : "Hello! I am your blackout poetry assistant, here to support you in writing your blackout poetry. Feel free to interact with me as you would any regular AI chatbot.",
   };
 
@@ -120,6 +121,34 @@ export default function ChatTab({
       element.scrollTo({ top: element.scrollHeight, behavior: "auto" });
     });
   }, [messages, markdownOutput]);
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      timeoutRef.current = setTimeout(() => {
+        const suggestionsText = promptSuggestions
+          .map((s) => `- ${s}`)
+          .join("\n");
+        const idleMessage: Message = {
+          id: nanoid(),
+          role: Role.LLM,
+          content: `Hello! 👋 I am here to help.\n\n Enter your own question or try asking me:\n${suggestionsText}`,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, idleMessage]);
+      }, 30000);
+    } else {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    }
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [messages.length, setMessages, promptSuggestions]);
 
   const handlePromptSelection = (prompt: string) => {
     setInput(prompt);
@@ -316,6 +345,9 @@ export default function ChatTab({
             <FiSend />
           </Button>
         </form>
+        <p className="text-xs text-gray-500 mt-2 justify-center flex">
+          The Blackout Poetry Partner can make mistakes.
+        </p>
       </div>
     </div>
   );

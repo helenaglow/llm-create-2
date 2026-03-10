@@ -152,7 +152,7 @@ const ConsentForm = () => {
             onCheckedChange={(e) => setChecked(!!e.checked)}
           >
             <Checkbox.HiddenInput />
-            <Checkbox.Control className="outline outline-1 outline-grey" />
+            <Checkbox.Control className="outline outline-1 outline-grey hover:cursor-pointer" />
             <Checkbox.Label className="text-main">
               I agree to this consent form*
             </Checkbox.Label>

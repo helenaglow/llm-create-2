@@ -38,21 +38,23 @@ function PoemPageTemplate({
                 </div>
                 <p className="text-h2"> Your Final Poem</p>
               </div>
-              {words.map((word, i) => {
-                const isVisible = visibleIndexes.includes(i);
-                return (
-                  <span
-                    key={i}
-                    className={`px-1 text-xs transition duration-300 ${
-                      isVisible
-                        ? "text-black bg-white"
-                        : "text-transparent bg-dark-grey"
-                    }`}
-                  >
-                    {word + " "}
-                  </span>
-                );
-              })}
+              <div className="leading-relaxed flex flex-wrap select-none h-max min-w-[350px] w-[350px]">
+                {words.map((word, i) => {
+                  const isVisible = visibleIndexes.includes(i);
+                  return (
+                    <span
+                      key={i}
+                      className={`px-1 text-xs transition duration-300 ${
+                        isVisible
+                          ? "text-black bg-white"
+                          : "text-transparent bg-dark-grey"
+                      }`}
+                    >
+                      {word + " "}
+                    </span>
+                  );
+                })}
+              </div>
             </div>
           </div>
         ) : (

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import HalfPageTemplate from "../../components/shared/pages/halfPage";
 import { useContext } from "react";
 import { DataContext } from "../../App";
 import { ArtistPreSurveyQuestions } from "../../consts/surveyQuestions";
 import SurveyScroll from "../../components/survey/surveyScroll";
+import FullPageTemplate from "../../components/shared/pages/fullScrollPage";
 
 const AristPreSurvey = () => {
   const navigate = useNavigate();
@@ -28,12 +28,9 @@ const AristPreSurvey = () => {
   };
 
   return (
-    <HalfPageTemplate
-      description="Please fill out the following questions before we begin! (Scroll to view all questions)"
-      background="bg5"
-    >
+    <FullPageTemplate description="Please fill out the following questions before we begin! (Scroll to view all questions)">
       <SurveyScroll survey={ArtistPreSurveyQuestions} onSubmit={handleSubmit} />
-    </HalfPageTemplate>
+    </FullPageTemplate>
   );
 };
 

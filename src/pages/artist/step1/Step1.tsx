@@ -61,7 +61,7 @@ const ArtistStep1 = () => {
   return (
     <MultiPageTemplate
       title="Step 1: Familiarize yourself with the text"
-      description="This is your time to familiarize yourself with the text and brainstorm for your poem. Feel free to take any notes in the text box below. Your notes will be accessible during the writing portion."
+      description="This is your time to familiarize yourself with the text and brainstorm for your poem. What is the passage about? What  themes appear? Do any words or ideas stand out? Feel free to take any notes in the text box below. Your notes will be accessible during the writing portion."
       duration={60}
       autoRedirectDuration={240}
       afterDuration={onComplete}
@@ -74,17 +74,19 @@ const ArtistStep1 = () => {
       notes={sparkNotes}
       setNotes={setSparkNotes}
     >
-      <div className="h-full w-full flex flex-col">
-        <p
-          className="text-main text-sm md:text-base select-none"
-          onCopy={(e) => e.preventDefault()}
-        >
-          {passage.text}
-        </p>
-        <p className="text-xs text-grey text-left pt-2">
-          <span className="italic">{'"' + passage.title + '"'}</span>
-          <span>{", " + passage.author + " from The New York Times"}</span>
-        </p>
+      <div className="w-full h-full flex">
+        <div className="w-[350px] min-w-[350px] md:min-w-[400px] md:w-[400px] h-max flex-col overflow-auto">
+          <p
+            className="text-main text-sm md:text-base select-none"
+            onCopy={(e) => e.preventDefault()}
+          >
+            {passage.text}
+          </p>
+          <p className="text-xs text-grey text-left pt-2">
+            <span className="italic">{'"' + passage.title + '"'}</span>
+            <span>{", " + passage.author + " from The New York Times"}</span>
+          </p>
+        </div>
       </div>
     </MultiPageTemplate>
   );

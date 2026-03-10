@@ -111,14 +111,16 @@ const Survey: React.FC<Props> = ({ survey, onSubmit }) => {
             />
           ))}
         </div>
-        <Button
-          className={`btn-primary ${
-            isSectionComplete() ? "" : "opacity-40 cursor-not-allowed"
-          }`}
-          onClick={nextSection}
-        >
-          {currentSection < survey.sections.length - 1 ? "Next" : "Submit"}
-        </Button>
+        <div className="w-full flex place-center">
+          <Button
+            className={`btn-primary ${
+              isSectionComplete() ? "" : "opacity-40 cursor-not-allowed"
+            }`}
+            onClick={nextSection}
+          >
+            {currentSection < survey.sections.length - 1 ? "Next" : "Submit"}
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ function MultiPageTemplate({
   passage,
 }: PageTemplateProps) {
   const [leftWidth, setLeftWidth] = useState(70); // %
-  const [topHeight, setTopHeight] = useState(70); // %
+  const [topHeight, setTopHeight] = useState(80); // %
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -246,7 +246,7 @@ function MultiPageTemplate({
                 <p>{description}</p>
               </div>
 
-              <div className={`w-full flex overflow-auto py-4 h-max`}>
+              <div className={`w-full flex overflow-auto h-max`}>
                 {children}
               </div>
             </div>

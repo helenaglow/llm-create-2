@@ -28,7 +28,7 @@ const MultipleChoice: React.FC<Props> = ({ question, value, onChange }) => {
             className="flex items-center gap-2 cursor-pointer"
           >
             <RadioGroup.ItemHiddenInput />
-            <RadioGroup.ItemIndicator className="border border-light-grey-1 focus:border-grey focus:border-2" />
+            <RadioGroup.ItemIndicator className="border border-light-grey-1 focus:border-grey focus:border-2 hover:cursor-pointer" />
             <RadioGroup.ItemText className="text-sub font-light">
               {opt}
             </RadioGroup.ItemText>

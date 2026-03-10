@@ -17,7 +17,7 @@ router.post("/query", async (req: express.Request, res: express.Response) => {
     const { messages } = req.body;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-5.2",
       messages: messages,
       stream: true,
     });

@@ -6,7 +6,7 @@ const ThankYou = () => {
   const [passageText, setPassageText] = useState("");
   const [words, setWords] = useState<string[]>([]);
   const [visibleIndexes, setVisibleIndexes] = useState<number[]>(
-    Array.from({ length: words.length }, (_, i) => i)
+    Array.from({ length: words.length }, (_, i) => i),
   );
 
   const context = useContext(DataContext);
@@ -29,14 +29,14 @@ const ThankYou = () => {
 
   return (
     <PageTemplate background="bg4" title="">
-      <div className="w-full h-full flex-col content-center justify-items-center grid">
+      <div className="w-full h-full flex-col justify-items-center grid overflow-scroll">
         <div className="max-w-3xl h-full flex flex-col">
           <p className="text-h1-dark text-center mb-2">Thank you!</p>
           <p className="text-main-dark text-sm text-center mb-4">
             We are grateful for your time and we hope you found this enjoyable!
             Here is your final poem:
           </p>
-          <div className="max-w-3xl text-center leading-relaxed flex flex-wrap p-4 bg-white rounded-xl">
+          <div className="text-center self-center leading-relaxed flex flex-wrap p-4 bg-white rounded-xl w-[350px] min-w-[350px] md:min-w-[400px] md:w-[400px] ">
             {words.map((word, i) => {
               const isVisible = visibleIndexes.includes(i);
               return (
