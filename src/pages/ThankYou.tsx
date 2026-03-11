@@ -36,19 +36,19 @@ const ThankYou = () => {
             We are grateful for your time and we hope you found this enjoyable!
             Here is your final poem:
           </p>
-          <div className="text-center self-center leading-relaxed flex flex-wrap p-4 bg-white rounded-xl w-[350px] min-w-[350px] md:min-w-[400px] md:w-[400px] ">
+          <div className="text-center self-center leading-relaxed flex flex-wrap p-4 bg-white rounded-xl w-[355px] min-w-[355px]">
             {words.map((word, i) => {
               const isVisible = visibleIndexes.includes(i);
               return (
                 <span
                   key={i}
-                  className={`px-1 transition duration-300 ${
+                  className={`text-sm transition duration-300 ${
                     isVisible
                       ? "text-black bg-white"
                       : "text-transparent bg-dark-grey"
                   }`}
                 >
-                  {word + " "}
+                  {word + "\u00A0"}
                 </span>
               );
             })}

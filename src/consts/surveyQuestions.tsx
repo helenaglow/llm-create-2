@@ -236,9 +236,15 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
       questions: [
         {
           id: "q1",
-          type: "range",
-          question: "I am more creative than ____% of humans",
-          labels: { min: "0%", max: "100%" },
+          type: "likertScale",
+          question: "I consider myself a creative person.",
+          options: [
+            { label: "Strongly Disagree", value: 1 },
+            { label: "Disagree", value: 2 },
+            { label: "Neutral", value: 3 },
+            { label: "Agree", value: 4 },
+            { label: "Strongly Agree", value: 5 },
+          ],
           required: true,
         },
       ],
@@ -481,9 +487,8 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
             { label: "A little", value: 2 },
             { label: "Some", value: 3 },
             { label: "A lot", value: 4 },
-            { label: "A great deal", value: 5 }
+            { label: "A great deal", value: 5 },
           ],
-          removeValues: true,
           required: true,
           doNotCollapse: true,
         },
@@ -497,9 +502,8 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
             { label: "Slightly", value: 2 },
             { label: "Moderately", value: 3 },
             { label: "Very", value: 4 },
-            { label: "Extremely", value: 5 }
+            { label: "Extremely", value: 5 },
           ],
-          removeValues: true,
           doNotCollapse: true,
           required: true,
         },
@@ -512,9 +516,8 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
             { label: "A little", value: 2 },
             { label: "Some", value: 3 },
             { label: "A lot", value: 4 },
-            { label: "A great deal", value: 5 }
+            { label: "A great deal", value: 5 },
           ],
-          removeValues: true,
           doNotCollapse: true,
           required: true,
         },

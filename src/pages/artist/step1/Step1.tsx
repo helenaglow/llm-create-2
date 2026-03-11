@@ -52,6 +52,7 @@ const ArtistStep1 = () => {
     sparkMessagesRef.current = sparkMessages;
     sparkNotesRef.current = sparkNotes;
   }, [sparkMessages, sparkNotes]);
+  const words = passage.text.split(" ");
 
   /**
    * a note about the timers - `autoRedirectDuration` starts running after `duration` finishes, meaning that
@@ -75,13 +76,18 @@ const ArtistStep1 = () => {
       setNotes={setSparkNotes}
     >
       <div className="w-full h-full flex">
-        <div className="w-[350px] min-w-[350px] md:min-w-[400px] md:w-[400px] h-max flex-col overflow-auto">
-          <p
-            className="text-main text-sm md:text-base select-none"
-            onCopy={(e) => e.preventDefault()}
-          >
-            {passage.text}
-          </p>
+        <div className=" flex flex-wrap select-none w-[355px] min-w-[355px] md:min-w-[400ox] md:w-[400px] h-max ">
+          {words.map((word, i) => {
+            return (
+              <span
+                key={i}
+                className={`text-main tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] cursor-pointer transition duration-200`}
+              >
+                {word + "\u00A0"}
+              </span>
+            );
+          })}
+
           <p className="text-xs text-grey text-left pt-2">
             <span className="italic">{'"' + passage.title + '"'}</span>
             <span>{", " + passage.author + " from The New York Times"}</span>

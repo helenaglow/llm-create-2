@@ -16,16 +16,18 @@ router.post("/query", async (req: express.Request, res: express.Response) => {
   try {
     const { messages } = req.body;
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-5.2",
-      messages: messages,
+    const stream = await openai.responses.create({
+      model: "gpt-5.4",
+      input: messages,
+      text: { verbosity: "low" },
       stream: true,
     });
 
-    for await (const chunk of completion) {
-      const delta = chunk.choices?.[0]?.delta?.content;
-      if (delta) {
-        res.write(`data: ${JSON.stringify({ content: delta })}\n\n`);
+    for await (const event of stream) {
+      if (event.type === "response.output_text.delta") {
+        res.write(`data: ${JSON.stringify({ content: event.delta })}\n\n`);
+
+        process.stdout.write(event.delta);
       }
     }
 
