@@ -76,12 +76,12 @@ const ArtistStep1 = () => {
       setNotes={setSparkNotes}
     >
       <div className="w-full h-full flex">
-        <div className=" flex flex-wrap select-none w-[355px] min-w-[355px] md:min-w-[400ox] md:w-[400px] h-max ">
+        <div className=" flex flex-wrap select-none w-[350px] min-w-[350px] md:min-w-[400ox] md:w-[400px] h-max ">
           {words.map((word, i) => {
             return (
               <span
                 key={i}
-                className={`text-main tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] cursor-pointer transition duration-200`}
+                className={`text-main font-serif tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] cursor-pointer transition duration-200`}
               >
                 {word + "\u00A0"}
               </span>

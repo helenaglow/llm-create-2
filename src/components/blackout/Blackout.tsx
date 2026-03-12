@@ -137,14 +137,14 @@ const BlackoutPoetry: React.FC<BlackoutProps> = ({
         <div className="flex flex-row gap-8">
           {/* Passage Side */}
           <div
-            className="flex flex-wrap select-none h-max w-[355px] min-w-[355px] md:min-w-[400px] md:w-[400px]"
+            className="flex flex-wrap select-none h-max w-[350px] min-w-[350px] md:min-w-[400px] md:w-[400px]"
             onCopy={(e) => e.preventDefault()}
           >
             {words.map((word, i) => {
               const isSelected = selectedWordIndexes.includes(i);
               const textColor = isSelected
-                ? "text-main text-main text-light-grey-1"
-                : "text-main hover:text-blue-800 hover:underline";
+                ? "text-main font-serif text-light-grey-1"
+                : "text-main font-serif hover:text-blue-800 hover:underline";
 
               return (
                 <span
@@ -166,8 +166,8 @@ const BlackoutPoetry: React.FC<BlackoutProps> = ({
             {words.map((word, i) => {
               const isSelected = selectedWordIndexes.includes(i);
               const blackoutStyle = isSelected
-                ? "text-main text-dark-grey"
-                : "text-main  text-dark-grey bg-dark-grey";
+                ? "text-main font-serif text-dark-grey"
+                : "text-main font-serif text-dark-grey bg-dark-grey";
 
               return (
                 <>
