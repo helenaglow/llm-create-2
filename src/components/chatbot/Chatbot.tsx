@@ -137,7 +137,7 @@ export default function ChatTab({
         };
         setMessages((prev) => [...prev, idleMessage]);
         setIdleMessageShown(true);
-      }, 20000);
+      }, 60000);
     }
   };
 
