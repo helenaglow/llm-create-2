@@ -23,7 +23,7 @@ const LikertScale: React.FC<Props> = ({ question, value, onChange }) => {
       <RadioGroup.Root
         value={value != null ? value.toString() : ""}
         onValueChange={(e) => onChange(question.id, parseInt(e.value!, 10))}
-        className="w-full"
+        className="w-full "
       >
         <div
           className={
@@ -80,10 +80,10 @@ const LikertScale: React.FC<Props> = ({ question, value, onChange }) => {
                 {/* Radio */}
                 <RadioGroup.Item
                   value={opt.value.toString()}
-                  className="cursor-pointer flex-shrink-0"
+                  className="cursor-pointer flex-shrink-0 "
                 >
                   <RadioGroup.ItemHiddenInput />
-                  <RadioGroup.ItemIndicator className="border border-light-grey-1 rounded-full w-4 h-4 focus:border-grey focus:border-2" />
+                  <RadioGroup.ItemIndicator className="border border-light-grey-1 rounded-full w-4 h-4 focus:border-grey focus:border-2 hover:cursor-pointer" />
                 </RadioGroup.Item>
 
                 {/* Label */}

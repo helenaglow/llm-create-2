@@ -19,4 +19,10 @@ export const Passages: Passage[] = [
     author: "Seth Stephens-Davidowitz",
     title: "They Hook You When You're Young",
   },
+  {
+    id: "4",
+    text: "By what metric are we to determine whether a model is “super”? If it is name recognition, Forbes list position, magazines covered, campaigns fronted or some algorithm of them all, Kate Upton probably qualifies. In 2013 Ms. Upton, a 21-year-old from Melbourne, Fla., was named model of the year and appeared on the cover of the Sports Illustrated swimsuit issue for the second straight year. This year she was demoted to the inside cover, pictured wearing a bikini in zero gravity. As a model she floats off the page, but she’s also a performer, with videos of her dancing going crash the Internet viral. So, all aboard the Hollywood starship express. In “The Other Woman,” due Friday, Ms. Upton will appear alongside Cameron Diaz and Leslie Mann. It is Ms. Upton’s third and by far most substantial screen credit. In her debut, the surprisingly pleasant “Tower Heist,” she played a mistress in what was by definition no more than a cameo.",
+    author: "Christopher Wallace",
+    title: "Yet Another Pretty Face",
+  },
 ];

@@ -133,50 +133,54 @@ const BlackoutPoetry: React.FC<BlackoutProps> = ({
       </div>
 
       {/* Two Column View */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-6">
-        {/* Passage Side */}
-        <div
-          className="leading-relaxed flex flex-wrap select-none h-max"
-          onCopy={(e) => e.preventDefault()}
-        >
-          {words.map((word, i) => {
-            const isSelected = selectedWordIndexes.includes(i);
-            const textColor = isSelected
-              ? "text-main text-light-grey-1"
-              : "text-main hover:text-blue-800 hover:underline";
+      <div className="w-full h-full overflow-auto">
+        <div className="flex flex-row gap-8">
+          {/* Passage Side */}
+          <div
+            className="flex flex-wrap select-none h-max w-[350px] min-w-[350px] md:min-w-[400px] md:w-[400px]"
+            onCopy={(e) => e.preventDefault()}
+          >
+            {words.map((word, i) => {
+              const isSelected = selectedWordIndexes.includes(i);
+              const textColor = isSelected
+                ? "text-main font-serif text-light-grey-1"
+                : "text-main font-serif hover:text-blue-800 hover:underline";
 
-            return (
-              <span
-                key={i}
-                onClick={() => toggleSelect(i)}
-                className={`cursor-pointer transition px-1 duration-200 ${textColor}`}
-              >
-                {word + " "}
-              </span>
-            );
-          })}
-        </div>
+              return (
+                <span
+                  key={i}
+                  onClick={() => toggleSelect(i)}
+                  className={` tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] cursor-pointer transition duration-200 ${textColor}`}
+                >
+                  {word + "\u00A0"}
+                </span>
+              );
+            })}
+          </div>
 
-        {/* Blackout Preview Side */}
-        <div
-          className="leading-relaxed flex flex-wrap select-none h-max"
-          onCopy={(e) => e.preventDefault()}
-        >
-          {words.map((word, i) => {
-            const isSelected = selectedWordIndexes.includes(i);
-            const blackoutStyle = isSelected
-              ? "text-main text-dark-grey"
-              : "text-main text-dark-grey bg-dark-grey";
+          {/* Blackout Preview Side */}
+          <div
+            className="flex flex-wrap select-none h-max w-[355px] min-w-[355px] md:min-w-[400px] md:w-[400px]"
+            onCopy={(e) => e.preventDefault()}
+          >
+            {words.map((word, i) => {
+              const isSelected = selectedWordIndexes.includes(i);
+              const blackoutStyle = isSelected
+                ? "text-main font-serif text-dark-grey"
+                : "text-main font-serif text-dark-grey bg-dark-grey";
 
-            return (
-              <span
-                key={i}
-                className={`px-1 transition duration-200 ${blackoutStyle}`}
-              >
-                {word + " "}
-              </span>
-            );
-          })}
+              return (
+                <>
+                  <span
+                    key={i}
+                    className={` tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] transition duration-200 ${blackoutStyle}`}
+                  >
+                    {word + "\u00A0"}
+                  </span>
+                </>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

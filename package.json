@@ -16,6 +16,7 @@
   "dependencies": {
     "@chakra-ui/react": "^3.23.0",
     "@emotion/react": "^11.14.0",
+    "@tailwindcss/typography": "^0.5.19",
     "axios": "^1.12.2",
     "concurrently": "^9.2.1",
     "cors": "^2.8.5",

@@ -1,5 +1,4 @@
 import { Collapsible, Icon, Image } from "@chakra-ui/react";
-import PageTemplate from "../../../components/shared/pages/page";
 import { useNavigate } from "react-router-dom";
 import { MdInfoOutline } from "react-icons/md";
 import BlackoutExample1 from "../../../assets/blackout1.png";
@@ -7,6 +6,7 @@ import BlackoutExample2 from "../../../assets/blackout2.png";
 import CheatIcon from "../../../assets/cheat-icon.png";
 import { useContext } from "react";
 import { DataContext } from "../../../App";
+import FullPageTemplate from "../../../components/shared/pages/fullScrollPage";
 
 const ArtistInstructions = () => {
   const navigate = useNavigate();
@@ -27,17 +27,20 @@ const ArtistInstructions = () => {
   };
 
   return (
-    <PageTemplate
+    <FullPageTemplate
       title="Your Task"
       background="bg2"
       nextButton={{ text: "Begin step 1", action: handleSubmit }}
     >
       <div className="w-full h-full flex-col space-y-6">
         <div className="text-main mb-2">
-          In this study, you will be introduced to blackout poetry and write
-          your own blackout poem! We will walk you through the whole process,
-          and know that blackout poetry is easier than writing a poem because
-          you are provided with the source material.
+          In this study, you will be introduced to blackout poetry, and be asked
+          to create your own poem. We are focusing here on the process of
+          writing rather than the result, so be sure to take time to understand
+          and explore the source material, as well as your own holistic
+          approach. Don’t worry if you don’t have much experience with blackout
+          poetry, we will guide you through the exercise. The most important
+          thing is to be curious about what you can create!
           <Collapsible.Root unmountOnExit>
             <Collapsible.Trigger className="text-main underline italic text-light-grey-1 pt-2">
               <div className="flex flex-row items-center space-x-2">
@@ -80,11 +83,11 @@ const ArtistInstructions = () => {
             <li className="text-main">
               <strong>Familiarize yourself with the text (1-3 minutes)</strong>
               <p className="text-main">
-                You’ll be given a piece of text to read. For now, don’t start
-                writing your poem yet. This is just your time to get to know the
-                text, think about it, and let ideas start forming.{" "}
+                You’ll be given a piece of text to read. Don’t think about how
+                this might become a poem just yet. This is just your time to get
+                to know the text, think about it, and let ideas start forming.{" "}
                 {(condition === "SPARK" || condition === "TOTAL_ACCESS") &&
-                  "You will also be guided with a blackout poetry assistant."}
+                  " Your blackout poetry partner is here to help you dive deeper into the text or further explain how to create a blackout poem. Try asking it about possible themes within the text, or which words might be connected to these themes. ."}
               </p>
             </li>
             <li className="text-main">
@@ -98,7 +101,7 @@ const ArtistInstructions = () => {
               </p>
             </li>
           </ul>
-          <div className="w-1/2 h-max p-4 mt-4 border rounded-lg border-light-grey-2 flex items-center gap-4">
+          <div className="w-full h-max p-4 mt-4 border rounded-lg border-light-grey-2 flex items-center gap-4">
             <Image alt="Cheat icon" src={CheatIcon} className="w-12" />
             <p className="text-main mb-0">
               Important: please do not take screenshots, copy text, or consult
@@ -110,7 +113,7 @@ const ArtistInstructions = () => {
           </div>
         </div>
       </div>
-    </PageTemplate>
+    </FullPageTemplate>
   );
 };
 

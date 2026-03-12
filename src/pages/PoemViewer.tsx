@@ -1,17 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Input, Button } from "@chakra-ui/react";
+import { Passages } from "../consts/passages";
 
 const PoemViewer: React.FC = () => {
-  const [passageText] = useState(
-    "Twilight settled over Zuckerman’s barn, and a feeling of peace. Fern knew it was almost suppertime but she couldn’t bear to leave. Swallows passed on silent wings, in and out of the doorways, bringing food to their young ones. From across the road a bird sang “Whippoorwill, whippoorwill!” Lurvy sat down under an apple tree and lit his pipe; the animals sniffed the familiar smell of strong tobacco. Wilbur heard the trill of the tree toad and the occasional slamming of the kitchen door. All these sounds made him feel comfortable and happy, for he loved life and loved to be a part of the world on a summer evening. But as he lay there he remembered what the old sheep had told him. The thought of death came to him and he began to tremble with fear."
-  );
+  const [selectedPassageId, setSelectedPassageId] = useState(Passages[0].id);
+
+  const passageText = useMemo(() => {
+    const passage = Passages.find((p) => p.id === selectedPassageId);
+    return passage?.text ?? "";
+  }, [selectedPassageId]);
 
   const words = passageText.split(" ");
 
   const [inputValue, setInputValue] = useState("");
-  const [visibleIndexes, setVisibleIndexes] = useState<number[]>(
-    Array.from({ length: words.length }, (_, i) => i)
-  );
+  const [visibleIndexes, setVisibleIndexes] = useState<number[]>([]);
+
+  // Reset visible indexes when passage changes
+  useEffect(() => {
+    setVisibleIndexes(Array.from({ length: words.length }, (_, i) => i));
+  }, [selectedPassageId, words.length]);
 
   const handleApply = () => {
     try {
@@ -29,6 +36,19 @@ const PoemViewer: React.FC = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="w-1/2 flex flex-col justify-center items-center p-6 space-y-6">
+        {/* Passage Selector */}
+        <select
+          value={selectedPassageId}
+          onChange={(e) => setSelectedPassageId(e.target.value)}
+          className="w-full max-w-lg p-2 border border-gray-300 rounded-md bg-white text-black"
+        >
+          {Passages.map((passage) => (
+            <option key={passage.id} value={passage.id}>
+              Passage {passage.id}: {passage.title}
+            </option>
+          ))}
+        </select>
+
         {/* Poem */}
         <div className="max-w-3xl text-center leading-relaxed flex flex-wrap">
           {words.map((word, i) => {
