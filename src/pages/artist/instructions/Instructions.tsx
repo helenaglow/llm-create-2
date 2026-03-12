@@ -85,9 +85,9 @@ const ArtistInstructions = () => {
               <p className="text-main">
                 You’ll be given a piece of text to read. Don’t think about how
                 this might become a poem just yet. This is just your time to get
-                to know the text, think about it, and let ideas start forming.{" "}
+                to know the text, think about it, and let ideas start forming.
                 {(condition === "SPARK" || condition === "TOTAL_ACCESS") &&
-                  " Your blackout poetry partner is here to help you dive deeper into the text or further explain how to create a blackout poem. Try asking it about possible themes within the text, or which words might be connected to these themes. ."}
+                  " Your blackout poetry partner is here to help you dive deeper into the text or further explain how to create a blackout poem. Try asking it about possible themes within the text, or which words might be connected to these themes."}
               </p>
             </li>
             <li className="text-main">
