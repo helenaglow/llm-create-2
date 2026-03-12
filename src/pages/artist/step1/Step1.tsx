@@ -75,8 +75,8 @@ const ArtistStep1 = () => {
       notes={sparkNotes}
       setNotes={setSparkNotes}
     >
-      <div className="w-full h-full flex">
-        <div className=" flex flex-wrap select-none w-[350px] min-w-[350px] md:min-w-[400ox] md:w-[400px] h-max ">
+      <div className="w-full h-full flex flex-col items-center">
+        <div className="flex mx-auto flex-wrap select-none w-[350px] min-w-[350px] md:min-w-[400ox] md:w-[400px] h-max ">
           {words.map((word, i) => {
             return (
               <span
