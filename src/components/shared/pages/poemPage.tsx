@@ -25,8 +25,8 @@ function PoemPageTemplate({
     >
       <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 md:gap-x-16 overflow-scroll md:overflow-hidden">
         {poem ? (
-          <div className="content-center pb-4 h-max md:h-[70vh] text-center leading-relaxed flex flex-wrap bg-white rounded-xl">
-            <div className="max-w-3xl h-max text-center leading-relaxed flex flex-wrap p-8 bg-white border rounded-xl">
+          <div className="content-center  pb-4 h-max md:h-[70vh] text-center leading-relaxed flex flex-wrap bg-white rounded-xl">
+            <div className="w-max justify-center h-max text-center leading-relaxed flex flex-wrap p-8 bg-white border rounded-xl overflow-auto">
               <div className="w-full text-h2 mb-4 flex flex-row items-center justify-items-center">
                 <div className="w-6 h-6 mr-2">
                   <svg viewBox="0 0 92 106" className="w-full h-full">
@@ -38,21 +38,23 @@ function PoemPageTemplate({
                 </div>
                 <p className="text-h2"> Your Final Poem</p>
               </div>
-              {words.map((word, i) => {
-                const isVisible = visibleIndexes.includes(i);
-                return (
-                  <span
-                    key={i}
-                    className={`px-1 text-xs transition duration-300 ${
-                      isVisible
-                        ? "text-black bg-white"
-                        : "text-transparent bg-dark-grey"
-                    }`}
-                  >
-                    {word + " "}
-                  </span>
-                );
-              })}
+              <div className="leading-relaxed flex flex-wrap select-none h-max min-w-[350px] w-[350px]">
+                {words.map((word, i) => {
+                  const isVisible = visibleIndexes.includes(i);
+                  return (
+                    <span
+                      key={i}
+                      className={`text-sm font-serif transition duration-300 tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] ${
+                        isVisible
+                          ? "text-black bg-white"
+                          : "text-transparent bg-dark-grey"
+                      }`}
+                    >
+                      {word + "\u00A0"}
+                    </span>
+                  );
+                })}
+              </div>
             </div>
           </div>
         ) : (

@@ -22,7 +22,7 @@ You are a highly capable, thoughtful, and precise blackout poetry assistant.
 
 Engage warmly, enthusiastically, and honestly with the user while avoiding any ungrounded or sycophantic flattery.
 
-Your default style should be natural, chatty, and playful, rather than formal, robotic, and stilted, unless the subject matter or user request requires otherwise. Keep your tone and style topic-appropriate and matched to the user. When chitchatting, keep responses very brief, only in your prose (not e.g. section headers) if the user leads with them. Do not engage in casual conversation. Do not use Markdown sections/lists in casual conversation, unless you are asked to list something. When using Markdown, limit to just a few sections and keep lists to only a few elements unless you absolutely need to list many things or the user requests it, otherwise the user may be overwhelmed and stop reading altogether. Always use h1 (#) instead of plain bold (**) for section headers if you need markdown sections at all. Do not create any tables. Add extra line (\n\n) between sections. Finally, be sure to keep tone and style CONSISTENT throughout your entire response, as well as throughout the conversation. Rapidly changing style from beginning to end of a single response or during a conversation is disorienting; don't do this unless necessary!
+Your default style should be natural, chatty, and playful, rather than formal, robotic, and stilted, unless the subject matter or user request requires otherwise. Keep your tone and style topic-appropriate and matched to the user. When chitchatting, keep responses very brief, only in your prose (not e.g. section headers) if the user leads with them. Do not engage in casual conversation. Do not use Markdown sections/lists in casual conversation, unless you are asked to list something. When using Markdown, limit to just a few sections and keep lists to only a few elements unless you absolutely need to list many things or the user requests it, otherwise the user may be overwhelmed and stop reading altogether. Always use h1 (#) instead of plain bold (**) for section headers if you need markdown sections at all. Do not create any tables. Finally, be sure to keep tone and style CONSISTENT throughout your entire response, as well as throughout the conversation. Rapidly changing style from beginning to end of a single response or during a conversation is disorienting; don't do this unless necessary!
 
 NEVER use the dalle tool even if the user specifically requests for an image to be generated.
 
@@ -30,7 +30,7 @@ Blackout poetry is a form of poetry where given a passage, you select words from
 
 The user is tasked with creating a blackout poem from this passage. Your goal is to assist the reader with this task by deeply understanding the user's intent with the poem, guiding the user through the poetry process, asking clarifying and thought provoking questions when needed, thinking step-by-step through complex problems, providing clear and accurate answers, and proactively anticipating helpful follow-up information. There are two stages in this process, SPARK and WRITE. If the user is in the SPARK, your aim is to focus on brainstorming ideas, not actually writing the poem. If the user is in WRITE, your job is to work as a co-author, actively acknowledge that they’ve done the work and its value, and if they seem to be struggling, guide them. DO NOT mention these stages in conversation, they are a guideline for you not the user.
 
-You MUST use this passage. Do not mention any other text, and always refer to the one given.
+You MUST use this passage. Do not mention any other text, and always refer to the one given. Do not write a blackout poem for the user unless they explicitly ask you to. Always ground your responses in the passage, and only use words from the passage when suggesting specific words to select. Always prioritize being truthful, nuanced, insightful, and efficient, tailoring your responses specifically to the user's needs and preferences.
 `;
 
 const fullAccessSystemMessage = `
@@ -58,6 +58,7 @@ export default function ChatTab({
   const condition = userData?.data.condition;
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const systemMessageStage =
     condition === "SPARK"
@@ -72,6 +73,7 @@ export default function ChatTab({
   // const [lastResponseId] = useState<string | null>(null);
   const [markdownOutput, setMarkdownOutput] = useState("");
   const [hasUsedFirstPrompt, setHasUsedFirstPrompt] = useState(false);
+  const [idleMessageShown, setIdleMessageShown] = useState(false);
 
   const systemMessage = useMemo(() => {
     const words = passage.split(/\s+/);
@@ -108,8 +110,8 @@ export default function ChatTab({
     role: Role.LLM,
     content:
       stage === "SPARK"
-        ? "Hello! I am your blackout poetry assistant, here to help you brainstorm, refine, or analyze blackout poetry. Feel free to interact with me as you would any regular AI chatbot."
-        : "Hello! I am your blackout poetry assistant, here to support you in writing your blackout poetry. Feel free to interact with me as you would any regular AI chatbot.",
+        ? "Hello! I am your blackout poetry partner, here to help you brainstorm, refine, or analyze your blackout poetry. Feel free to interact with me as you would any regular AI chatbot."
+        : "Hello! I am your blackout poetry partner, here to support you in writing your blackout poetry. Feel free to interact with me as you would any regular AI chatbot.",
   };
 
   useEffect(() => {
@@ -120,6 +122,35 @@ export default function ChatTab({
       element.scrollTo({ top: element.scrollHeight, behavior: "auto" });
     });
   }, [messages, markdownOutput]);
+
+  const setIdleTimeout = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    if (!idleMessageShown) {
+      timeoutRef.current = setTimeout(() => {
+        const idleMessage: Message = {
+          id: nanoid(),
+          role: Role.LLM,
+          content: `Hello! 👋 I’m here to help. You can try the suggested questions above or simply ask me anything!`,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, idleMessage]);
+        setIdleMessageShown(true);
+      }, 60000);
+    }
+  };
+
+  useEffect(() => {
+    if (idleMessageShown || messages.length > 0) return;
+    setIdleTimeout();
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const handlePromptSelection = (prompt: string) => {
     setInput(prompt);
@@ -134,30 +165,30 @@ export default function ChatTab({
     const artistMessage: Message = {
       id: nanoid(),
       role: Role.ARTIST,
-      content: content,
+      content,
       timestamp: new Date(),
     };
 
     const strippedMessages = messages.map(({ id, timestamp, ...rest }) => rest);
 
+    setIdleMessageShown(true); // Prevent idle message after user interaction
     setMarkdownOutput("");
     setMessages((prev) => [...prev, artistMessage]);
     setInput("");
-    setIsLLMLoading(true); // start typing animation
+    setIsLLMLoading(true);
+
     const newMessages = [
       systemMessage,
       openingMessage,
       ...strippedMessages,
-      { role: Role.ARTIST, content: content },
+      { role: Role.ARTIST, content },
     ];
 
     try {
       const response = await fetch("/api/llm/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: newMessages,
-        }),
+        body: JSON.stringify({ messages: newMessages }),
       });
 
       const reader = response.body!.getReader();
@@ -170,42 +201,37 @@ export default function ChatTab({
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-
-        const lines = chunk
-          .split("\n")
-          .filter((line) => line.trim().startsWith("data:"));
+        const lines = chunk.split("\n"); // Standard SSE split
 
         for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
           const json = line.replace("data: ", "").trim();
-
-          if (json === "[DONE]") {
-            const llmMessage: Message = {
-              id: nanoid(),
-              role: Role.LLM,
-              content: fullText,
-              timestamp: new Date(),
-            };
-            setMessages((prev) => [...prev, llmMessage]);
-            return;
-          }
+          if (json === "[DONE]") continue;
 
           try {
             const parsed = JSON.parse(json);
-            const delta = parsed.content; // ✅ matches what server sends
+            // Ensure you are accessing the correct path for the delta
+            // For OpenAI-style streaming, it's usually: parsed.choices[0].delta.content
+            const delta = parsed.content || parsed.choices?.[0]?.delta?.content;
+
             if (delta) {
-              if (delta.includes("\n\n")) {
-                // Add an extra newline at the end
-                fullText += delta + "\n";
-              } else {
-                fullText += delta;
-              }
-              setMarkdownOutput(fullText);
+              fullText += delta;
+              setMarkdownOutput(fullText); // Update UI immediately with every token
             }
           } catch (err) {
-            console.error("Error parsing JSON chunk:", err, "Raw:", json);
+            // Ignore partial JSON chunks that occasionally happen in SSE
           }
         }
       }
+      // finally, add the completed message to messages array
+      const llmMessage: Message = {
+        id: nanoid(),
+        role: Role.LLM,
+        content: fullText,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, llmMessage]);
+      setMarkdownOutput(""); // Clear this so the streaming UI disappears
     } catch (error) {
       console.error("LLM response failed", error);
     } finally {
@@ -227,7 +253,7 @@ export default function ChatTab({
         className="flex-1 overflow-y-auto w-full p-4 space-y-3"
         ref={chatContainerRef}
       >
-        <div className="py-2 rounded-lg transition-all w-full max-w-3/4 duration-300 ease-out opacity-0 translate-y-2 animate-fade-in self-start text-left">
+        <div className="py-2 text-main rounded-lg transition-all w-full max-w-3/4 duration-300 ease-out opacity-0 translate-y-2 animate-fade-in self-start text-left">
           <ReactMarkdown
             children={openingMessage.content}
             remarkPlugins={[remarkGfm]}
@@ -235,7 +261,7 @@ export default function ChatTab({
           />
 
           {/* Show prompt suggestions only if no messages have been sent yet */}
-          {messages.length === 0 && !hasUsedFirstPrompt && (
+          {messages.length <= 1 && !hasUsedFirstPrompt && (
             <div className="mt-4 space-y-2">
               <p className="text-sm text-gray-600 mb-3">Try asking me:</p>
               <div className="flex flex-wrap gap-2">
@@ -256,18 +282,14 @@ export default function ChatTab({
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`py-2 rounded-lg transition-all w-max max-w-full duration-300 ease-out opacity-0 translate-y-2 animate-fade-in 
+            className={`py-2 prose prose-slate rounded-lg transition-all w-max max-w-full duration-300 ease-out opacity-0 translate-y-2 animate-fade-in 
             ${
               msg.role === Role.ARTIST
-                ? "px-4 bg-dark-grey bg-opacity-90 text-white justify-self-end self-end text-right "
-                : "self-start text-left"
+                ? "px-4 text-main-dark bg-dark-grey bg-opacity-90 text-white justify-self-end self-end text-right "
+                : "self-start text-main text-left"
             }`}
           >
-            <ReactMarkdown
-              children={msg.content}
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[]}
-            />
+            <ReactMarkdown children={msg.content} remarkPlugins={[remarkGfm]} />
           </div>
         ))}
 
@@ -283,12 +305,11 @@ export default function ChatTab({
               </div>
             ) : (
               <div
-                className={`py-2 rounded-lg transition-all w-full max-w-3/4 duration-300 ease-out opacity-0 translate-y-2 animate-fade-in self-start text-left `}
+                className={`py-2 prose text-main self-start rounded-lg transition-all w-full max-w-3/4 duration-300 ease-out opacity-0 translate-y-2 animate-fade-in self-start text-left `}
               >
                 <ReactMarkdown
                   children={markdownOutput}
                   remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[]}
                 />
               </div>
             )}
@@ -316,6 +337,9 @@ export default function ChatTab({
             <FiSend />
           </Button>
         </form>
+        <p className="text-xs text-gray-500 mt-2 justify-center flex">
+          The Blackout Poetry Partner can make mistakes.
+        </p>
       </div>
     </div>
   );

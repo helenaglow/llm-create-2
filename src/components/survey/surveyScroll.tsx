@@ -23,7 +23,7 @@ const SurveyScroll: React.FC<Props> = ({ survey, onSubmit }) => {
 
   const allQuestions = useMemo(
     () => survey.sections.flatMap((section) => section.questions),
-    [survey.sections]
+    [survey.sections],
   );
 
   const requiredQuestions = allQuestions.filter((q) => q.required);
@@ -109,14 +109,16 @@ const SurveyScroll: React.FC<Props> = ({ survey, onSubmit }) => {
         ))}
 
         {/* Submit Button */}
-        <Button
-          className={`btn-primary self-center mt-8 ${
-            isSurveyComplete ? "" : "opacity-40 cursor-not-allowed"
-          }`}
-          onClick={handleSubmit}
-        >
-          Submit
-        </Button>
+        <div className="w-full flex justify-center">
+          <Button
+            className={`btn-primary self-center mt-8 ${
+              isSurveyComplete ? "" : "opacity-40 cursor-not-allowed"
+            }`}
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </div>
       </div>
     </div>
   );
