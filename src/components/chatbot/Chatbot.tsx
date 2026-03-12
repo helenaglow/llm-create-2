@@ -127,7 +127,6 @@ export default function ChatTab({
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    console.log(messages.length);
     if (!idleMessageShown) {
       timeoutRef.current = setTimeout(() => {
         const idleMessage: Message = {
