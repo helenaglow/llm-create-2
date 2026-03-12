@@ -36,22 +36,24 @@ const ThankYou = () => {
             We are grateful for your time and we hope you found this enjoyable!
             Here is your final poem:
           </p>
-          <div className="text-center self-center leading-relaxed flex flex-wrap p-4 bg-white rounded-xl w-[350px] min-w-[350px]">
-            {words.map((word, i) => {
-              const isVisible = visibleIndexes.includes(i);
-              return (
-                <span
-                  key={i}
-                  className={`text-sm font-seriftransition duration-300 ${
-                    isVisible
-                      ? "text-black bg-white"
-                      : "text-transparent bg-dark-grey"
-                  }`}
-                >
-                  {word + "\u00A0"}
-                </span>
-              );
-            })}
+          <div className="text-center self-center leading-relaxed flex flex-wrap p-4 bg-white rounded-xl w-max">
+            <div className="leading-relaxed flex flex-wrap select-none h-max min-w-[350px] w-[350px]">
+              {words.map((word, i) => {
+                const isVisible = visibleIndexes.includes(i);
+                return (
+                  <span
+                    key={i}
+                    className={`text-sm font-serif transition duration-300 tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] ${
+                      isVisible
+                        ? "text-black bg-white"
+                        : "text-transparent bg-dark-grey"
+                    }`}
+                  >
+                    {word + "\u00A0"}
+                  </span>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
