@@ -81,7 +81,7 @@ const ArtistStep1 = () => {
             return (
               <span
                 key={i}
-                className={`text-main font-serif tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] cursor-pointer transition duration-200`}
+                className={`text-main font-serif tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] transition duration-200`}
               >
                 {word + "\u00A0"}
               </span>
