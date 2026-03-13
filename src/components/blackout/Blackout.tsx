@@ -133,7 +133,7 @@ const BlackoutPoetry: React.FC<BlackoutProps> = ({
       </div>
 
       {/* Two Column View */}
-      <div className="w-full h-full overflow-auto">
+      <div className="mx-auto h-full overflow-auto">
         <div className="flex flex-row gap-8">
           {/* Passage Side */}
           <div
