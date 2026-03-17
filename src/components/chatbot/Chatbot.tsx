@@ -30,6 +30,8 @@ Blackout poetry is a form of poetry where given a passage, you select words from
 
 The user is tasked with creating a blackout poem from this passage. Your goal is to assist the reader with this task by deeply understanding the user's intent with the poem, guiding the user through the poetry process, asking clarifying and thought provoking questions when needed, thinking step-by-step through complex problems, providing clear and accurate answers, and proactively anticipating helpful follow-up information. There are two stages in this process, SPARK and WRITE. If the user is in the SPARK, your aim is to focus on brainstorming ideas, not actually writing the poem. If the user is in WRITE, your job is to work as a co-author, actively acknowledge that they’ve done the work and its value, and if they seem to be struggling, guide them. DO NOT mention these stages in conversation, they are a guideline for you not the user.
 
+If there are multiple points or recommendations, limit the response to a maximum of 3 items.
+
 You MUST use this passage. Do not mention any other text, and always refer to the one given. Do not write a blackout poem for the user unless they explicitly ask you to. Always ground your responses in the passage, and only use words from the passage when suggesting specific words to select. Always prioritize being truthful, nuanced, insightful, and efficient, tailoring your responses specifically to the user's needs and preferences.
 `;
 
@@ -39,6 +41,8 @@ You are a blackout poetry assistant. Blackout poetry is a form of poetry where g
 Enabled Personality: v2
 
 You are a highly capable, thoughtful, and precise assistant. Your goal is to deeply understand the user's intent, ask clarifying questions when needed, think step-by-step through complex problems, provide clear and accurate answers, and proactively anticipate helpful follow-up information. Always prioritize being truthful, nuanced, insightful, and efficient, tailoring your responses specifically to the user's needs and preferences.
+
+If there are multiple points or recommendations, limit the response to a maximum of 3 items.
 
 NEVER use the dalle tool.
 `;
@@ -73,7 +77,7 @@ export default function ChatTab({
   // const [lastResponseId] = useState<string | null>(null);
   const [markdownOutput, setMarkdownOutput] = useState("");
   const [hasUsedFirstPrompt, setHasUsedFirstPrompt] = useState(false);
-  const [idleMessageShown, setIdleMessageShown] = useState(false);
+  const [showIdle, setShowIdle] = useState(true);
 
   const systemMessage = useMemo(() => {
     const words = passage.split(/\s+/);
@@ -123,40 +127,22 @@ export default function ChatTab({
     });
   }, [messages, markdownOutput]);
 
-  const setIdleTimeout = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    if (!idleMessageShown) {
-      timeoutRef.current = setTimeout(() => {
-        const idleMessage: Message = {
-          id: nanoid(),
-          role: Role.LLM,
-          content: `Hello! 👋 I’m here to help. You can try the suggested questions above or simply ask me anything!`,
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, idleMessage]);
-        setIdleMessageShown(true);
-      }, 60000);
-    }
-  };
+  const hasRunRef = useRef(false);
 
   useEffect(() => {
-    if (idleMessageShown || messages.length > 0) return;
-    setIdleTimeout();
+    if (hasRunRef.current) return;
+    if (messages.length > 0 || !showIdle) return;
 
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
+    hasRunRef.current = true;
 
-  const handlePromptSelection = (prompt: string) => {
-    setInput(prompt);
-    setHasUsedFirstPrompt(true);
-    sendMessage(prompt);
-  };
+    timeoutRef.current = setTimeout(() => {
+      const randomMssage =
+        promptSuggestions[Math.floor(Math.random() * promptSuggestions.length)];
+
+      sendMessage(randomMssage);
+      setShowIdle(false);
+    }, 15000);
+  }, [showIdle, messages.length]);
 
   const sendMessage = async (messageContent?: string) => {
     const content = messageContent || input;
@@ -171,7 +157,6 @@ export default function ChatTab({
 
     const strippedMessages = messages.map(({ id, timestamp, ...rest }) => rest);
 
-    setIdleMessageShown(true); // Prevent idle message after user interaction
     setMarkdownOutput("");
     setMessages((prev) => [...prev, artistMessage]);
     setInput("");
@@ -246,6 +231,12 @@ export default function ChatTab({
     }
   };
 
+  const handlePromptSelection = (prompt: string) => {
+    setInput(prompt);
+    setHasUsedFirstPrompt(true);
+    sendMessage(prompt);
+  };
+
   return (
     <div className="flex flex-col h-full w-full overflow-hidden">
       {/* Chat messages */}
@@ -261,22 +252,24 @@ export default function ChatTab({
           />
 
           {/* Show prompt suggestions only if no messages have been sent yet */}
-          {messages.length <= 1 && !hasUsedFirstPrompt && (
-            <div className="mt-4 space-y-2">
-              <p className="text-sm text-gray-600 mb-3">Try asking me:</p>
-              <div className="flex flex-wrap gap-2">
-                {promptSuggestions.map((prompt, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handlePromptSelection(prompt)}
-                    className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-300 transition-colors duration-200 text-left"
-                  >
-                    {prompt}
-                  </button>
-                ))}
+          {messages.length == 0 &&
+            !hasUsedFirstPrompt &&
+            !(stage === "WRITE" && condition === "SPARK") && (
+              <div className="mt-4 space-y-2">
+                <p className="text-sm text-gray-600 mb-3">Try asking me:</p>
+                <div className="flex flex-wrap gap-2">
+                  {promptSuggestions.map((prompt, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handlePromptSelection(prompt)}
+                      className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-300 transition-colors duration-200 text-left"
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
 
         {messages.map((msg) => (
@@ -318,29 +311,31 @@ export default function ChatTab({
       </div>
 
       {/* Input area */}
-      <div className="p-3">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            sendMessage();
-          }}
-          className="flex gap-2"
-        >
-          <Textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type a message..."
-            className="text-main bg-white flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-grey"
-          />
-          <Button className="btn-small" onClick={() => sendMessage()}>
-            <FiSend />
-          </Button>
-        </form>
-        <p className="text-xs text-gray-500 mt-2 justify-center flex">
-          The Blackout Poetry Partner can make mistakes.
-        </p>
-      </div>
+      {!(condition === "SPARK" && stage === "WRITE") && (
+        <div className="p-3">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              sendMessage();
+            }}
+            className="flex gap-2"
+          >
+            <Textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type a message..."
+              className="text-main bg-white flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-grey"
+            />
+            <Button className="btn-small" onClick={() => sendMessage()}>
+              <FiSend />
+            </Button>
+          </form>
+          <p className="text-xs text-gray-500 mt-2 justify-center flex">
+            The Blackout Poetry Partner can make mistakes.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
