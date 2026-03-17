@@ -141,7 +141,7 @@ export default function ChatTab({
 
       sendMessage(randomMssage);
       setShowIdle(false);
-    }, 15000);
+    }, 60000);
   }, [showIdle, messages.length]);
 
   const sendMessage = async (messageContent?: string) => {
