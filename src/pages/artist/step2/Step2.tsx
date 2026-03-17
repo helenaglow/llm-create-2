@@ -29,10 +29,10 @@ const ArtistStep2 = () => {
   const poemSnapshotsRef = useRef<PoemSnapshot[]>([]);
   const writeNotesRef = useRef<string>("");
   const [writeNotes, setWriteNotes] = useState(
-    artistData?.poem?.sparkNotes || ""
+    artistData?.poem?.sparkNotes || "",
   );
   const [writeMessages, setWriteMessages] = useState<Message[]>(
-    artistPoem.sparkConversation || []
+    artistPoem.sparkConversation || [],
   );
   const [selectedWordIndexes, setSelectedWordIndexes] = useState<number[]>([]);
   const [poemSnapshots, setPoemSnapshots] = useState<PoemSnapshot[]>([]);
@@ -66,7 +66,11 @@ const ArtistStep2 = () => {
       autoRedirectDuration={420}
       afterDuration={onComplete}
       buttonText="Submit"
-      llmAccess={userType == "TOTAL_ACCESS" || userType == "WRITING"}
+      llmAccess={
+        userType == "TOTAL_ACCESS" ||
+        userType == "WRITING" ||
+        userType == "SPARK"
+      }
       stage={Stage.WRITE}
       passage={artistPoem?.passage.text || ""}
       messages={writeMessages}
