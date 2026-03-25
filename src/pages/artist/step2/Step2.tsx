@@ -31,9 +31,7 @@ const ArtistStep2 = () => {
   const [writeNotes, setWriteNotes] = useState(
     artistData?.poem?.sparkNotes || "",
   );
-  const [writeMessages, setWriteMessages] = useState<Message[]>(
-    artistPoem.sparkConversation || [],
-  );
+  const [writeMessages, setWriteMessages] = useState<Message[]>([]);
   const [selectedWordIndexes, setSelectedWordIndexes] = useState<number[]>([]);
   const [poemSnapshots, setPoemSnapshots] = useState<PoemSnapshot[]>([]);
   const userType = userData?.data.condition as ArtistCondition;
