@@ -26,6 +26,7 @@ router.post("/autosave", async (req, res) => {
       5: "brainstorm",
       6: "write",
       7: "post-survey",
+      8: "thank-you",
     };
 
     const status = data.data?.timeStamps
@@ -87,7 +88,11 @@ router.post("/commit-session", async (req, res) => {
 
     batch.set(artistRef, artist);
     batch.set(surveyRef, { artistId: artistRef.id, ...surveyData });
-    batch.set(poemRef, { artistId: artistRef.id, ...poemData });
+    batch.set(poemRef, {
+      artistId: artistRef.id,
+      ...poemData,
+      random: Math.random(),
+    });
     batch.delete(incompleteRef);
 
     await batch.commit();
