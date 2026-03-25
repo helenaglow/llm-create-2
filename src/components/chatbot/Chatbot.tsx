@@ -83,7 +83,7 @@ export default function ChatTab({
     const words = passage.split(/\s+/);
     const selectedWords =
       selectedWordIndexes
-        ?.sort()
+        ?.sort((a, b) => a - b)
         .map((i) => words[i])
         .join(" ") || "";
 
@@ -115,7 +115,7 @@ export default function ChatTab({
     content:
       stage === "SPARK"
         ? "Hello! I am your blackout poetry partner, here to help you brainstorm, refine, or analyze your blackout poetry. Feel free to interact with me as you would any regular AI chatbot."
-        : "Hello! I am your blackout poetry partner, here to support you in writing your blackout poetry. Feel free to interact with me as you would any regular AI chatbot.",
+        : "Hello! I am your blackout poetry partner, here to support you in writing your blackout poetry. Feel free to interact with me as you would any regular AI chatbot. I also have context into the words that you are selecting, so I can better assist you in shaping your poem.",
   };
 
   useEffect(() => {
