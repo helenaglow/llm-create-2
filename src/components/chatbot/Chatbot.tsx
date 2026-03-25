@@ -118,6 +118,11 @@ export default function ChatTab({
         : "Hello! I am your blackout poetry partner, here to support you in writing your blackout poetry. Feel free to interact with me as you would any regular AI chatbot. I also have context into the words that you are selecting, so I can better assist you in shaping your poem.",
   };
 
+  const idleMessage =
+    stage === "SPARK"
+      ? `The user has not sent a message yet, greet them warmly and offer a few simple, low-pressure prompts to spark their thinking. For example, you might say hello and suggest they begin with questions like: “What is the passage about?”, “What themes appear?”, or “Do any words or ideas stand out?”. If they seem stuck, gently reassure them that it’s okay and encourage them to share anything they have so far. Keep the tone friendly, supportive, and encouraging. Avoid overwhelming the user—offer just a few helpful suggestions and invite them to start anywhere.`
+      : `The user has not sent a message yet, greet them warmly and offer a few simple, low-pressure prompts to spark their thinking. For example, you might say hello and suggest they begin with questions like: “What directions could my blackout poem take?”, “Which themes feels strongest to build around?”, or “How do I begin choosing words?”. If they seem stuck, gently reassure them that it’s okay and encourage them to share anything they have so far. Keep the tone friendly, supportive, and encouraging. Avoid overwhelming the user—offer just a few helpful suggestions and invite them to start anywhere.`;
+
   useEffect(() => {
     const element = chatContainerRef.current;
     if (!element) return;
@@ -136,13 +141,82 @@ export default function ChatTab({
     hasRunRef.current = true;
 
     timeoutRef.current = setTimeout(() => {
-      const randomMssage =
-        promptSuggestions[Math.floor(Math.random() * promptSuggestions.length)];
-
-      sendMessage(randomMssage);
+      sendMessageWithoutText(idleMessage);
       setShowIdle(false);
-    }, 20000);
+    }, 40000);
   }, [showIdle, messages.length]);
+
+  const sendMessageWithoutText = async (messageContent?: string) => {
+    const content = messageContent || input;
+    if (!content.trim()) return;
+
+    const strippedMessages = messages.map(({ id, timestamp, ...rest }) => rest);
+
+    setMarkdownOutput("");
+    setInput("");
+    setIsLLMLoading(true);
+
+    const newMessages = [
+      systemMessage,
+      openingMessage,
+      ...strippedMessages,
+      { role: Role.ARTIST, content },
+    ];
+
+    try {
+      const response = await fetch("/api/llm/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMessages }),
+      });
+
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder("utf-8");
+
+      let fullText = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n"); // Standard SSE split
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const json = line.replace("data: ", "").trim();
+          if (json === "[DONE]") continue;
+
+          try {
+            const parsed = JSON.parse(json);
+            // Ensure you are accessing the correct path for the delta
+            // For OpenAI-style streaming, it's usually: parsed.choices[0].delta.content
+            const delta = parsed.content || parsed.choices?.[0]?.delta?.content;
+
+            if (delta) {
+              fullText += delta;
+              setMarkdownOutput(fullText); // Update UI immediately with every token
+            }
+          } catch (err) {
+            // Ignore partial JSON chunks that occasionally happen in SSE
+          }
+        }
+      }
+      // finally, add the completed message to messages array
+      const llmMessage: Message = {
+        id: nanoid(),
+        role: Role.LLM,
+        content: fullText,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, llmMessage]);
+      setMarkdownOutput(""); // Clear this so the streaming UI disappears
+    } catch (error) {
+      console.error("LLM response failed", error);
+    } finally {
+      setIsLLMLoading(false);
+    }
+  };
 
   const sendMessage = async (messageContent?: string) => {
     const content = messageContent || input;
@@ -254,6 +328,7 @@ export default function ChatTab({
           {/* Show prompt suggestions only if no messages have been sent yet */}
           {messages.length == 0 &&
             !hasUsedFirstPrompt &&
+            !isLLMLoading &&
             !(stage === "WRITE" && condition === "SPARK") && (
               <div className="mt-4 space-y-2">
                 <p className="text-sm text-gray-600 mb-3">Try asking me:</p>
