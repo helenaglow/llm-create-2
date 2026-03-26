@@ -52,7 +52,7 @@ router.post("/autosave", async (req, res) => {
 
 router.post("/commit-session", async (req, res) => {
   try {
-    const { artistData, surveyData, poemData, sessionId } = req.body;
+    const { artistData, surveyData, poemData, sessionId, prolific } = req.body;
 
     if (!artistData) {
       return res.status(400).json({ error: "Missing artistData" });
@@ -79,12 +79,16 @@ router.post("/commit-session", async (req, res) => {
       .collection(INCOMPLETE_SESSION_COLLECTION)
       .doc(sessionId);
 
-    const artist = {
+    const artist: Record<string, any> = {
       condition: artistData.condition,
       surveyResponse: surveyRef,
       poem: poemRef,
       timestamps: [...(artistData.timeStamps ?? []), new Date()],
     };
+
+    if (prolific) {
+      artist.prolific = prolific;
+    }
 
     batch.set(artistRef, artist);
     batch.set(surveyRef, { artistId: artistRef.id, ...surveyData });
