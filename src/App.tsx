@@ -75,17 +75,17 @@ function App() {
 
   // clear session storage and set the session ID on first render
   useEffect(() => {
-    const id = nanoid();
-
     sessionStorage.clear();
-
-    sessionStorage.setItem("sessionId", id);
-    setSessionId(id);
 
     const params = new URLSearchParams(window.location.search);
     const prolificPid = params.get("PROLIFIC_PID");
     const studyId = params.get("STUDY_ID");
     const prolificSessionId = params.get("SESSION_ID");
+
+    const id = prolificPid ?? nanoid();
+
+    sessionStorage.setItem("sessionId", id);
+    setSessionId(id);
 
     if (prolificPid && studyId && prolificSessionId) {
       setProlific({ prolificPid, studyId, prolificSessionId });
