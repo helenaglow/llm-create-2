@@ -14,7 +14,7 @@ const ArtistPostSurvey = () => {
     throw new Error("Component must be used within a DataContext.Provider");
   }
 
-  const { userData, addPostSurvey, sessionId, isTestMode } = context;
+  const { userData, addPostSurvey, sessionId, prolific, isTestMode } = context;
 
   const navigate = useNavigate();
   const poemData = userData?.data && (userData.data as Artist).poem;
@@ -56,6 +56,7 @@ const ArtistPostSurvey = () => {
           surveyData,
           poemData,
           sessionId,
+          prolific: prolific ?? null,
         }),
       });
 
@@ -64,7 +65,14 @@ const ArtistPostSurvey = () => {
         type: "success",
         duration: 5000,
       });
-      navigate("/artist/thank-you");
+
+      if (prolific) {
+        window.location.replace(
+          "https://app.prolific.com/submissions/complete?cc=CEX432JK",
+        );
+      } else {
+        navigate("/artist/thank-you");
+      }
     } catch (error) {
       console.error("Error saving data:", error);
       toaster.create({
