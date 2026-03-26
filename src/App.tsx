@@ -34,6 +34,7 @@ import type {
   Audience,
   ArtistSurvey,
   AudienceSurvey,
+  ProlificMeta,
 } from "./types";
 import { Provider } from "./components/ui/provider";
 import { Toaster } from "./components/ui/toaster";
@@ -50,6 +51,7 @@ interface DataContextValue {
     updates: Partial<ArtistSurvey> | Partial<AudienceSurvey>,
   ) => void;
   sessionId: string | null;
+  prolific: ProlificMeta | null;
   flushSaves: () => Promise<void>;
   isTestMode: boolean;
   setIsTestMode: (value: boolean) => void;
@@ -60,6 +62,7 @@ export const DataContext = createContext<DataContextValue | null>(null);
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [prolific, setProlific] = useState<ProlificMeta | null>(null);
   const [isTestMode, setIsTestMode] = useState<boolean>(false);
   const saveTimerRef = useRef<number | null>(null);
 
@@ -78,6 +81,15 @@ function App() {
 
     sessionStorage.setItem("sessionId", id);
     setSessionId(id);
+
+    const params = new URLSearchParams(window.location.search);
+    const prolificPid = params.get("PROLIFIC_PID");
+    const studyId = params.get("STUDY_ID");
+    const prolificSessionId = params.get("SESSION_ID");
+
+    if (prolificPid && studyId && prolificSessionId) {
+      setProlific({ prolificPid, studyId, prolificSessionId });
+    }
   }, []);
 
   const enqueueAutosave = (data: UserData | null) => {
@@ -223,6 +235,7 @@ function App() {
         addPostSurvey,
         addPreSurvey,
         sessionId,
+        prolific,
         flushSaves,
         isTestMode,
         setIsTestMode,

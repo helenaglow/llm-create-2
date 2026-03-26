@@ -185,9 +185,15 @@ export interface TopXRankingQuestion extends BaseQuestion {
   maxSelectable: number; // maximum number of selectable options
 }
 
+export interface ProlificMeta {
+  prolificPid: string;
+  studyId: string;
+  prolificSessionId: string;
+}
+
 export type UserData =
-  | { role: "artist"; data: Artist }
-  | { role: "audience"; data: Audience };
+  | { role: "artist"; data: Artist; prolific?: ProlificMeta }
+  | { role: "audience"; data: Audience; prolific?: ProlificMeta };
 
 export type PoemSnapshot = {
   action: "ADD" | "REMOVE";
