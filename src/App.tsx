@@ -82,7 +82,7 @@ function App() {
     const studyId = params.get("STUDY_ID");
     const prolificSessionId = params.get("SESSION_ID");
 
-    const id = prolificPid ?? nanoid();
+    const id = prolificSessionId ?? nanoid();
 
     sessionStorage.setItem("sessionId", id);
     setSessionId(id);
