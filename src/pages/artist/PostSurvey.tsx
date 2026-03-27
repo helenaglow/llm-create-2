@@ -14,7 +14,7 @@ const ArtistPostSurvey = () => {
     throw new Error("Component must be used within a DataContext.Provider");
   }
 
-  const { userData, addPostSurvey, sessionId, prolific, isTestMode } = context;
+  const { userData, addPostSurvey, sessionId, prolific, disableRefreshGuard, isTestMode } = context;
 
   const navigate = useNavigate();
   const poemData = userData?.data && (userData.data as Artist).poem;
@@ -67,6 +67,7 @@ const ArtistPostSurvey = () => {
       });
 
       if (prolific) {
+        disableRefreshGuard();
         window.location.replace(
           "https://app.prolific.com/submissions/complete?cc=CEX432JK",
         );

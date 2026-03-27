@@ -53,6 +53,7 @@ interface DataContextValue {
   sessionId: string | null;
   prolific: ProlificMeta | null;
   flushSaves: () => Promise<void>;
+  disableRefreshGuard: () => void;
   isTestMode: boolean;
   setIsTestMode: (value: boolean) => void;
 }
@@ -66,7 +67,7 @@ function App() {
   const [isTestMode, setIsTestMode] = useState<boolean>(false);
   const saveTimerRef = useRef<number | null>(null);
 
-  usePreventRefresh(
+  const { disable: disableRefreshGuard } = usePreventRefresh(
     "To make sure your session counts, please avoid refreshing the page. Do you still want to refresh?",
   );
   usePreventBack(
@@ -237,6 +238,7 @@ function App() {
         sessionId,
         prolific,
         flushSaves,
+        disableRefreshGuard,
         isTestMode,
         setIsTestMode,
       }}
