@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 export default function usePreventBack(message: string) {
   useEffect(() => {
-    window.history.pushState(null, "", window.location.pathname);
+    window.history.pushState(null, "", window.location.href);
 
     const handlePopState = () => {
       alert(message);
