@@ -8,9 +8,10 @@ import { toaster } from "../../components/ui/toaster";
 interface Props {
   survey: SurveyDefinition;
   onSubmit: (answers: SurveyAnswers) => void;
+  isSubmitting?: boolean;
 }
 
-const SurveyScroll: React.FC<Props> = ({ survey, onSubmit }) => {
+const SurveyScroll: React.FC<Props> = ({ survey, onSubmit, isSubmitting = false }) => {
   const [answers, setAnswers] = useState<SurveyAnswers>({});
   const context = useContext(DataContext);
   if (!context) {
@@ -60,6 +61,7 @@ const SurveyScroll: React.FC<Props> = ({ survey, onSubmit }) => {
   const isSurveyComplete = answeredCount === requiredQuestions.length;
 
   const handleSubmit = () => {
+    if (isSubmitting) return;
     if (isSurveyComplete) {
       onSubmit(answers);
     } else {
@@ -112,11 +114,12 @@ const SurveyScroll: React.FC<Props> = ({ survey, onSubmit }) => {
         <div className="w-full flex justify-center">
           <Button
             className={`btn-primary self-center mt-8 ${
-              isSurveyComplete ? "" : "opacity-40 cursor-not-allowed"
+              isSurveyComplete && !isSubmitting ? "" : "opacity-40 cursor-not-allowed"
             }`}
+            disabled={!isSurveyComplete || isSubmitting}
             onClick={handleSubmit}
           >
-            Submit
+            {isSubmitting ? "Submitting…" : "Submit"}
           </Button>
         </div>
       </div>
