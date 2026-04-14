@@ -15,7 +15,7 @@ const ArtistStep1 = () => {
   if (!context) {
     throw new Error("Component must be used within a DataContext.Provider");
   }
-  const { userData, addRoleSpecificData } = context;
+  const { userData, addRoleSpecificData, isTestMode } = context;
 
   const sparkMessagesRef = useRef<Message[]>([]);
   const sparkNotesRef = useRef<string>("");
@@ -63,8 +63,8 @@ const ArtistStep1 = () => {
     <MultiPageTemplate
       title="Step 1: Familiarize yourself with the text"
       description="This is your time to familiarize yourself with the text and brainstorm for your poem. What is the passage about? What  themes appear? Do any words or ideas stand out? Feel free to take any notes in the text box below. Your notes will be accessible during the writing portion."
-      duration={60}
-      autoRedirectDuration={240}
+      duration={isTestMode ? 5 : 60}
+      autoRedirectDuration={isTestMode ? 5 : 240}
       afterDuration={onComplete}
       buttonText="Begin Writing"
       llmAccess={userType == "TOTAL_ACCESS" || userType == "SPARK"}

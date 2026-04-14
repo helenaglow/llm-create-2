@@ -1,6 +1,6 @@
 import SurveyScroll from "../../components/survey/surveyScroll";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useRef, useState } from "react";
 import { DataContext } from "../../App";
 import { ArtistPostSurveyQuestions } from "../../consts/surveyQuestions";
 import type { SurveyDefinition, Artist } from "../../types";
@@ -17,6 +17,8 @@ const ArtistPostSurvey = () => {
   const { userData, addPostSurvey, sessionId, prolific, disableRefreshGuard, isTestMode } = context;
 
   const navigate = useNavigate();
+  const submitInFlightRef = useRef(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const poemData = userData?.data && (userData.data as Artist).poem;
   const submitDb = async (answers: any) => {
     // format the data
@@ -86,45 +88,53 @@ const ArtistPostSurvey = () => {
   };
 
   const handleSubmit = async (answers: any) => {
-    addPostSurvey({
-      postSurvey: ArtistPostSurveyQuestions,
-      postAnswers: answers,
-    });
+    if (submitInFlightRef.current) return;
+    submitInFlightRef.current = true;
+    setIsSubmitting(true);
+    try {
+      addPostSurvey({
+        postSurvey: ArtistPostSurveyQuestions,
+        postAnswers: answers,
+      });
 
-    if (isTestMode) {
-      try {
-        const testData = {
-          ...userData,
-          data: {
-            ...userData?.data,
-            surveyResponse: {
-              ...(userData?.data as Artist).surveyResponse,
-              postSurvey: ArtistPostSurveyQuestions,
-              postAnswers: answers,
+      if (isTestMode) {
+        try {
+          const testData = {
+            ...userData,
+            data: {
+              ...userData?.data,
+              surveyResponse: {
+                ...(userData?.data as Artist).surveyResponse,
+                postSurvey: ArtistPostSurveyQuestions,
+                postAnswers: answers,
+              },
             },
-          },
-        };
-        await fetch("/api/firebase/autosave", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId, data: testData }),
-        });
-        toaster.create({
-          description: "Test session saved (not committed to production).",
-          type: "success",
-          duration: 5000,
-        });
-        navigate("/artist/thank-you");
-      } catch (error) {
-        console.error("Error saving test data:", error);
-        toaster.create({
-          description: "There was an error saving. Please try again.",
-          type: "error",
-          duration: 5000,
-        });
+          };
+          await fetch("/api/firebase/autosave", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sessionId, data: testData }),
+          });
+          toaster.create({
+            description: "Test session saved (not committed to production).",
+            type: "success",
+            duration: 5000,
+          });
+          navigate("/artist/thank-you");
+        } catch (error) {
+          console.error("Error saving test data:", error);
+          toaster.create({
+            description: "There was an error saving. Please try again.",
+            type: "error",
+            duration: 5000,
+          });
+        }
+      } else {
+        await submitDb(answers);
       }
-    } else {
-      submitDb(answers);
+    } finally {
+      submitInFlightRef.current = false;
+      setIsSubmitting(false);
     }
   };
 
@@ -142,7 +152,11 @@ const ArtistPostSurvey = () => {
       description="Please fill out the following questions before we wrap things up! (Scroll to view all questions)"
       poem={poemData}
     >
-      <SurveyScroll survey={filteredSurvey} onSubmit={handleSubmit} />
+      <SurveyScroll
+        survey={filteredSurvey}
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
+      />
     </PoemPageTemplate>
   );
 };
