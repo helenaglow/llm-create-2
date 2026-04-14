@@ -19,7 +19,7 @@ const ArtistStep2 = () => {
   if (!context) {
     throw new Error("Component must be used within a DataContext.Provider");
   }
-  const { userData, addRoleSpecificData } = context;
+  const { userData, addRoleSpecificData, isTestMode } = context;
 
   const artistData = userData?.data as Artist;
   const artistPoem = artistData?.poem;
@@ -60,8 +60,8 @@ const ArtistStep2 = () => {
     <MultiPageTemplate
       title="Step 2: Write your poem"
       description="Create a poem by clicking on words in the passage."
-      duration={180}
-      autoRedirectDuration={420}
+      duration={isTestMode ? 5 : 180}
+      autoRedirectDuration={isTestMode ? 5 : 420}
       afterDuration={onComplete}
       buttonText="Submit"
       llmAccess={

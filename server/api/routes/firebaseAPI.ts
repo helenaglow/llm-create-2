@@ -6,7 +6,7 @@ const router = express.Router();
 const ARTIST_COLLECTION = "artist";
 const ARTIST_SURVEY_COLLECTION = "artistSurvey";
 const POEM_COLLECTION = "poem";
-const INCOMPLETE_SESSION_COLLECTION = "incompleteSession";
+const INCOMPLETE_SESSION_COLLECTION = "artistIncompleteSession";
 
 router.post("/autosave", async (req, res) => {
   try {

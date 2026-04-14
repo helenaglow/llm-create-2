@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from "react";
+import React, { useState, useContext, useMemo, useRef } from "react";
 import type { SurveyDefinition, SurveyAnswers } from "../../types";
 import QuestionRenderer from "./questionRenderer";
 import { Progress, Button } from "@chakra-ui/react";
@@ -8,10 +8,12 @@ import { toaster } from "../../components/ui/toaster";
 interface Props {
   survey: SurveyDefinition;
   onSubmit: (answers: SurveyAnswers) => void;
+  isSubmitting?: boolean;
 }
 
-const SurveyScroll: React.FC<Props> = ({ survey, onSubmit }) => {
+const SurveyScroll: React.FC<Props> = ({ survey, onSubmit, isSubmitting = false }) => {
   const [answers, setAnswers] = useState<SurveyAnswers>({});
+  const submitCalledRef = useRef(false);
   const context = useContext(DataContext);
   if (!context) {
     throw new Error("Component must be used within a DataContext.Provider");
@@ -60,9 +62,12 @@ const SurveyScroll: React.FC<Props> = ({ survey, onSubmit }) => {
   const isSurveyComplete = answeredCount === requiredQuestions.length;
 
   const handleSubmit = () => {
+    if (isSubmitting || submitCalledRef.current) return;
+    submitCalledRef.current = true;
     if (isSurveyComplete) {
       onSubmit(answers);
     } else {
+      submitCalledRef.current = false;
       toaster.create({
         description: "Please fill out all required questions!",
         type: "error",
@@ -112,11 +117,12 @@ const SurveyScroll: React.FC<Props> = ({ survey, onSubmit }) => {
         <div className="w-full flex justify-center">
           <Button
             className={`btn-primary self-center mt-8 ${
-              isSurveyComplete ? "" : "opacity-40 cursor-not-allowed"
+              isSurveyComplete && !isSubmitting ? "" : "opacity-40 cursor-not-allowed"
             }`}
+            disabled={!isSurveyComplete || isSubmitting}
             onClick={handleSubmit}
           >
-            Submit
+            {isSubmitting ? "Submitting…" : "Submit"}
           </Button>
         </div>
       </div>
