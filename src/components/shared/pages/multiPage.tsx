@@ -16,6 +16,7 @@ interface PageTemplateProps {
   buttonText?: string;
   afterDuration?: () => void;
   llmAccess?: boolean;
+  chatReady?: boolean;
   stage: Stage;
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
@@ -39,6 +40,7 @@ function MultiPageTemplate({
   afterDuration,
   buttonText,
   llmAccess = false,
+  chatReady = true,
   stage,
   messages,
   setMessages,
@@ -289,6 +291,7 @@ function MultiPageTemplate({
                 stage={stage}
                 passage={passage}
                 selectedWordIndexes={selectedWordIndexes}
+                chatReady={chatReady}
               />
             </div>
           </>

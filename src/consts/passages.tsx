@@ -19,12 +19,12 @@ export const Passages: Passage[] = [
   //   author: "Noel Streatfeild",
   //   title: "Ballet Shoes",
   // },
-  // {
-  //   id: "4",
-  //   text: `"That may make me feel badly tomorrow, Josie," laughed Anne, "but just now I honestly feel that as long as I know the violets are coming out all purple down in the hollow below Green Gables and that little ferns are poking their heads up in Lovers' Lane, it's not a great deal of difference whether I win the Avery or not. I've done my best and I begin to understand what is meant by the 'joy of the strife.' Next to trying and winning, the best thing is trying and failing. Girls, don't talk about exams! Look at that arch of pale green sky over those houses and picture to yourself what it must look like over the purply-dark beech-woods back of Avonlea." "What are you going to wear for commencement, Jane?" asked Ruby practically. Jane and Josie both answered at once and the chatter drifted into a side eddy of fashions. But Anne, with her elbows on the window sill, her soft cheek laid against her clasped hands, and her eyes filled with visions, looked out unheedingly across city roof and spire to that glorious dome of sunset sky and wove her dreams of a possible future from the golden tissue of youth's own optimism.`,
-  //   author: "Lucy Maud Montgomery",
-  //   title: "Anne of Green Gables",
-  // },
+  {
+    id: "2",
+    text: `"Look at that arch of pale green sky over those houses and picture to yourself what it must look like over the purply-dark beech-woods back of Avonlea." "What are you going to wear for commencement, Jane?" asked Ruby practically. Jane and Josie both answered at once and the chatter drifted into a side eddy of fashions. But Anne, with her elbows on the window sill, her soft cheek laid against her clasped hands, and her eyes filled with visions, looked out unheedingly across city roof and spire to that glorious dome of sunset sky and wove her dreams of a possible future from the golden tissue of youth's own optimism.`,
+    author: "Lucy Maud Montgomery",
+    title: "Anne of Green Gables",
+  },
   // {
   //   id: "5",
   //   text: `A woman who was so hard on herself and others could be sweet and smiling with Clara and at times, by extension, with Blanca. Only with Clara did she allow herself the luxury of giving in to her overwhelming desire to serve and be loved; with her, however slyly, she was able to express the secret, most delicate yearnings of her soul. e long years of solitude and unhappiness had distilled her emotions and purified her feelings down to a few terrible, magnificent passions, which possessed her totally. She had no gift for small perturbations, mean-spirited resentments, concealed envies, works of charity, faded endearments, ordinary friendly politeness, or day-to-day acts of kindness. She was one of those people who are born for the greatness of a single love, for exaggerated hatred, for apocalyptic vengeance, and for the most sublime forms of heroism, but she was unable to shape her fate to the dimensions of her amorous vocation, so it was lived out as something flat and gray trapped between her mother’s sickroom walls, wretched tenements, and the tortured confessions with which this large, opulent, hot-blooded woman—made for maternity, abundance, action, and ardor—was consuming herself.`,

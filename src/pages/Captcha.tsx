@@ -77,71 +77,78 @@ const Captcha = () => {
     }
   };
 
+  const makePoem = (): Poem => {
+    const passage = Passages.find((p) => p.id === "1")!;
+    return {
+      passageId: passage.id,
+      passage,
+      text: [],
+      sparkConversation: [],
+      writeConversation: [],
+      sparkNotes: "",
+      writeNotes: "",
+      poemSnapshot: [],
+    };
+  };
+
   const handleSubmit = () => {
     if (inputCaptcha === "blackout") {
       addUserData({ role: "artist" });
-      addRoleSpecificData({ condition: ArtistCondition.TOTAL_ACCESS });
-
-      // pick random passage (works if Passages entries are strings or objects)
-      const randomIndex = Math.floor(Math.random() * (Passages?.length || 1));
-      const selected = Passages?.[randomIndex] ?? "";
-
-      let artistPoem: Poem = {
-        passageId: selected.id,
-        passage: selected,
-        text: [],
-        sparkConversation: [],
-        writeConversation: [],
-        sparkNotes: "",
-        writeNotes: "",
-        poemSnapshot: [],
-      };
-      artistPoem.sparkConversation = [];
-      artistPoem.sparkNotes = "";
-      addRoleSpecificData({
-        poem: artistPoem,
-      });
+      addRoleSpecificData({ condition: ArtistCondition.LLM, poem: makePoem() });
       navigate("/artist/blackout");
-    } else if (inputCaptcha === "control") {
+    } else if (inputCaptcha === "control" || inputCaptcha === "noai") {
       addUserData({ role: "artist" });
-      addRoleSpecificData({ condition: ArtistCondition.CONTROL });
       addRoleSpecificData({
+        condition: ArtistCondition.NO_AI,
+        poem: makePoem(),
         timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
       });
       navigate("/consent");
-    } else if (inputCaptcha === "spark") {
+    } else if (
+      inputCaptcha === "llm" ||
+      inputCaptcha === "spark" ||
+      inputCaptcha === "writing" ||
+      inputCaptcha === "complete"
+    ) {
       addUserData({ role: "artist" });
-      addRoleSpecificData({ condition: ArtistCondition.SPARK });
       addRoleSpecificData({
-        timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
-      });
-      navigate("/consent");
-    } else if (inputCaptcha === "writing") {
-      addUserData({ role: "artist" });
-      addRoleSpecificData({ condition: ArtistCondition.WRITING });
-      addRoleSpecificData({
-        timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
-      });
-      navigate("/consent");
-    } else if (inputCaptcha === "complete") {
-      addUserData({ role: "artist" });
-      addRoleSpecificData({ condition: ArtistCondition.TOTAL_ACCESS });
-      addRoleSpecificData({
+        condition: ArtistCondition.LLM,
+        poem: makePoem(),
         timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
       });
       navigate("/consent");
     } else if (inputCaptcha === captchaMessage) {
       addUserData({ role: "artist" });
-      addRoleSpecificData({ condition: getRandomArtistCondition() });
       addRoleSpecificData({
+        condition: getRandomArtistCondition(),
+        poem: makePoem(),
+        timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
+      });
+      navigate("/consent");
+    } else if (inputCaptcha === "LLM_TEST") {
+      setIsTestMode(true);
+      addUserData({ role: "artist" });
+      addRoleSpecificData({
+        condition: ArtistCondition.LLM,
+        poem: makePoem(),
+        timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
+      });
+      navigate("/consent");
+    } else if (inputCaptcha === "NOLLM_TEST") {
+      setIsTestMode(true);
+      addUserData({ role: "artist" });
+      addRoleSpecificData({
+        condition: ArtistCondition.NO_AI,
+        poem: makePoem(),
         timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
       });
       navigate("/consent");
     } else if (inputCaptcha == TEST_CAPTCHA) {
       setIsTestMode(true);
       addUserData({ role: "artist" });
-      addRoleSpecificData({ condition: ArtistCondition.TOTAL_ACCESS });
       addRoleSpecificData({
+        condition: ArtistCondition.LLM,
+        poem: makePoem(),
         timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
       });
       navigate("/consent");
