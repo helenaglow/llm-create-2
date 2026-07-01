@@ -6,8 +6,10 @@ import { Stage } from "../../../types";
 import type { Message, Poem } from "../../../types";
 import { useContext } from "react";
 import { DataContext } from "../../../App";
-import type { Passage } from "../../../types";
-import { Passages } from "../../../consts/passages";
+import type { Artist, Passage } from "../../../types";
+import { Button } from "@chakra-ui/react";
+import StarIcon from "../../../assets/star.svg";
+
 const ArtistStep1 = () => {
   const navigate = useNavigate();
 
@@ -15,17 +17,22 @@ const ArtistStep1 = () => {
   if (!context) {
     throw new Error("Component must be used within a DataContext.Provider");
   }
-  const { userData, addRoleSpecificData, isTestMode } = context;
+  const { userData, addRoleSpecificData } = context;
 
   const sparkMessagesRef = useRef<Message[]>([]);
   const sparkNotesRef = useRef<string>("");
 
-  const randomIndex = Math.floor(Math.random() * (Passages?.length || 1));
-  const selected = Passages?.[randomIndex] ?? "";
-  const [passage] = useState<Passage>(selected);
+  const passage = (userData?.data as Artist)?.poem?.passage as Passage;
   const userType = userData?.data.condition as ArtistCondition;
+  const isLLM = userType === "LLM";
+
   const [sparkMessages, setSparkMessages] = useState<Message[]>([]);
   const [sparkNotes, setSparkNotes] = useState<string>("");
+
+  // 0 = brainstorm instructions (all users), 1 = LLM assistant info (LLM only), done
+  const [popupStep, setPopupStep] = useState(0);
+  const totalPopups = isLLM ? 2 : 1;
+  const showingPopup = popupStep < totalPopups;
 
   let artistPoem: Poem = {
     passageId: passage.id,
@@ -52,49 +59,97 @@ const ArtistStep1 = () => {
     sparkMessagesRef.current = sparkMessages;
     sparkNotesRef.current = sparkNotes;
   }, [sparkMessages, sparkNotes]);
+
   const words = passage.text.split(" ");
 
-  /**
-   * a note about the timers - `autoRedirectDuration` starts running after `duration` finishes, meaning that
-   * in this case, the users must complete 1 minute of brainstorming and then have 2 minutes before they are
-   * auto-redirected. so the users have a total alloted time of 1-3 minutes to do brainstorming
-   */
   return (
-    <MultiPageTemplate
-      title="Step 1: Familiarize yourself with the text"
-      description="This is your time to familiarize yourself with the text and brainstorm for your poem. What is the passage about? What  themes appear? Do any words or ideas stand out? Feel free to take any notes in the text box below. Your notes will be accessible during the writing portion."
-      duration={isTestMode ? 5 : 60}
-      autoRedirectDuration={isTestMode ? 5 : 240}
-      afterDuration={onComplete}
-      buttonText="Begin Writing"
-      llmAccess={userType == "TOTAL_ACCESS" || userType == "SPARK"}
-      stage={Stage.SPARK}
-      passage={passage.text}
-      messages={sparkMessages}
-      setMessages={setSparkMessages}
-      notes={sparkNotes}
-      setNotes={setSparkNotes}
-    >
-      <div className="w-full h-full flex flex-col items-center">
-        <div className="flex mx-auto flex-wrap select-none w-[350px] min-w-[350px] md:min-w-[400ox] md:w-[400px] h-max ">
-          {words.map((word, i) => {
-            return (
-              <span
-                key={i}
-                className={`text-main font-serif tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] transition duration-200`}
-              >
-                {word + "\u00A0"}
-              </span>
-            );
-          })}
-
-          <p className="text-xs text-grey text-left pt-2">
-            <span className="italic">{'"' + passage.title + '"'}</span>
-            <span>{", " + passage.author + " from The New York Times"}</span>
-          </p>
+    <>
+      {showingPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-xl shadow-lg p-8 max-w-sm w-full mx-4 space-y-4">
+            {popupStep === 0 ? (
+              <>
+                <div className="flex items-center gap-2">
+                  <p className="text-h3">Brainstorm</p>
+                  <span className="text-sub">· 1–3 min</span>
+                </div>
+                <p className="text-sub">
+                  Read through the passage and let ideas form. What is it about?
+                  What themes or words stand out? You can take notes in the box
+                  below — they'll carry over into the writing step.
+                </p>
+                <Button
+                  className="btn-primary w-full"
+                  onClick={() => setPopupStep((s) => s + 1)}
+                >
+                  {isLLM ? "Next" : "Begin"}
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2">
+                  <img
+                    src={StarIcon}
+                    alt=""
+                    className="w-3.5 h-3.5 flex-shrink-0"
+                  />
+                  <p className="text-h3">You have an AI assistant</p>
+                </div>
+                <p className="text-sub">
+                  You have access to an AI assistant on the right side of your
+                  screen. Feel free to use it however you like, just as you
+                  would any other AI chatbot.
+                </p>
+                <Button
+                  className="btn-primary w-full"
+                  onClick={() => setPopupStep((s) => s + 1)}
+                >
+                  Got it
+                </Button>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-    </MultiPageTemplate>
+      )}
+      <MultiPageTemplate
+        title="Familiarize yourself with the text"
+        description="This is your time to familiarize yourself with the text and brainstorm for your poem. What is the passage about? What themes appear? Do any words or ideas stand out? Feel free to take any notes in the text box below. Your notes will be accessible during the writing portion."
+        duration={showingPopup ? undefined : 60}
+        autoRedirectDuration={showingPopup ? undefined : 240}
+        afterDuration={onComplete}
+        buttonText="Begin Writing"
+        llmAccess={isLLM}
+        chatReady={!showingPopup}
+        stage={Stage.SPARK}
+        passage={passage.text}
+        messages={sparkMessages}
+        setMessages={setSparkMessages}
+        notes={sparkNotes}
+        setNotes={setSparkNotes}
+      >
+        <div
+          className={`w-full h-full flex flex-col items-center transition-all duration-300 ${showingPopup ? "blur-sm pointer-events-none select-none" : ""}`}
+        >
+          <div className="flex mx-auto flex-wrap select-none w-[350px] min-w-[350px] md:min-w-[400ox] md:w-[400px] h-max ">
+            {words.map((word, i) => {
+              return (
+                <span
+                  key={i}
+                  className={`text-main font-serif tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision] transition duration-200`}
+                >
+                  {word + " "}
+                </span>
+              );
+            })}
+
+            <p className="text-xs text-grey text-left pt-2">
+              <span className="italic">{'"' + passage.title + '"'}</span>
+              <span>{", " + passage.author + " from The New York Times"}</span>
+            </p>
+          </div>
+        </div>
+      </MultiPageTemplate>
+    </>
   );
 };
 

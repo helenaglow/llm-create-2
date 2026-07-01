@@ -4,10 +4,7 @@ import { useContext } from "react";
 import { DataContext } from "../../../App";
 import { Image } from "@chakra-ui/react";
 import LLMInstructionImage from "../../../assets/llm-example.png";
-
-// ===========================
-// 🚮 TO BE REMOVED
-// ===========================
+import StarIcon from "../../../assets/star.svg";
 
 const LLMInstruction = () => {
   const navigate = useNavigate();
@@ -17,25 +14,19 @@ const LLMInstruction = () => {
     throw new Error("Component must be used within a DataContext.Provider");
   }
 
-  const { userData } = context;
-  const condition = userData?.data.condition;
-
   const handleSubmit = () => {
-    if (condition == "SPARK" || condition == "TOTAL_ACCESS") {
-      navigate("/artist/brainstorm");
-    } else {
-      navigate("/artist/blackout");
-    }
+    navigate("/artist/brainstorm");
   };
 
   return (
     <PageTemplate
-      nextButton={{ text: "Next", action: handleSubmit }}
+      nextButton={{ text: "Got it", action: handleSubmit }}
       background="bg3"
     >
-      <div className="w-full h-full space-y-4">
-        <div className="w-full h-max flex flex-row items-center space-x-4">
-          <div className="w-8 h-8">
+      <div className="w-full h-full space-y-5">
+        {/* Header */}
+        <div className="flex flex-row items-center space-x-3">
+          <div className="w-7 h-7 flex-shrink-0">
             <svg viewBox="0 0 92 106" className="w-full h-full">
               <path
                 fill="#2F2F2F"
@@ -43,23 +34,34 @@ const LLMInstruction = () => {
               />
             </svg>
           </div>
-          <p className="text-h1 w-full"> Introducing Blackout Assistant</p>
+          <p className="text-h1">Meet your Blackout Assistant</p>
         </div>
 
-        <div className="text-main text-grey pb-4">
-          <p>
-            {condition === "SPARK"
-              ? "While brainstorming, you’ll have access to the Blackout Assistant. Feel free to explore and use it in whatever way helps you best — it’s completely up to you!"
-              : condition === "WRITING"
-              ? "While writing your blackout, you’ll have access to the Blackout Assistant. Feel free to explore and use it in whatever way helps you best — it’s completely up to you!"
-              : "During brainstorming and writing your blackout, you’ll have access to the Blackout Assistant. Feel free to explore and use it in whatever way helps you best — it’s completely up to you!"}
-          </p>
+        <p className="text-main text-grey">
+          You have access to an AI assistant during both steps of the task. It's
+          there to support your process — use it as much or as little as you
+          like.
+        </p>
+
+        {/* Tips */}
+        <div className="space-y-2">
+          {[
+            "Ask it about themes, tone, or ideas you notice in the passage",
+            "Request word suggestions or help narrowing your focus",
+            "Use it to think out loud — it can ask you questions too",
+            "It can see which words you've selected, so it understands your poem as it develops",
+          ].map((tip, i) => (
+            <div key={i} className="flex items-start gap-2">
+              <img src={StarIcon} alt="" className="w-2.5 h-2.5 mt-1 flex-shrink-0" />
+              <p className="text-main text-sm">{tip}</p>
+            </div>
+          ))}
         </div>
 
         <Image
           alt="LLM Example"
           src={LLMInstructionImage}
-          className="justify-self-center lg:h-96"
+          className="justify-self-center max-h-52 lg:max-h-64"
         />
       </div>
     </PageTemplate>

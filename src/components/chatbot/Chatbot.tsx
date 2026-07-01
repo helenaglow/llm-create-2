@@ -14,6 +14,7 @@ interface ChatTabProps {
   stage: Stage;
   selectedWordIndexes?: number[];
   passage: string;
+  chatReady?: boolean;
 }
 
 const systemMessageDefault = `
@@ -35,42 +36,26 @@ If there are multiple points or recommendations, limit the response to a maximum
 You MUST use this passage. Do not mention any other text, and always refer to the one given. Do not write a blackout poem for the user unless they explicitly ask you to. Always ground your responses in the passage, and only use words from the passage when suggesting specific words to select. Always prioritize being truthful, nuanced, insightful, and efficient, tailoring your responses specifically to the user's needs and preferences.
 `;
 
-const fullAccessSystemMessage = `
-You are a blackout poetry assistant. Blackout poetry is a form of poetry where given a passage, you select words from that passage to create a poem. Words must be selected in order as they appear in the passage, and selected words must appear in the passage.',
-
-Enabled Personality: v2
-
-You are a highly capable, thoughtful, and precise assistant. Your goal is to deeply understand the user's intent, ask clarifying questions when needed, think step-by-step through complex problems, provide clear and accurate answers, and proactively anticipate helpful follow-up information. Always prioritize being truthful, nuanced, insightful, and efficient, tailoring your responses specifically to the user's needs and preferences.
-
-If there are multiple points or recommendations, limit the response to a maximum of 3 items.
-
-NEVER use the dalle tool.
-`;
-
 export default function ChatTab({
   messages,
   setMessages,
   selectedWordIndexes,
   stage,
   passage,
+  chatReady = true,
 }: ChatTabProps) {
   const context = useContext(DataContext);
   if (!context) {
     throw new Error("Component must be used within a DataContext.Provider");
   }
-  const { userData } = context;
-  const condition = userData?.data.condition;
-
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const systemMessageStage =
-    condition === "SPARK"
-      ? fullAccessSystemMessage
-      : systemMessageDefault +
-        (stage == "SPARK"
-          ? `The user is in the SPARK stage.`
-          : `The user is in the WRITE stage.`);
+    systemMessageDefault +
+    (stage == "SPARK"
+      ? `The user is in the SPARK stage.`
+      : `The user is in the WRITE stage.`);
 
   const [isLLMLoading, setIsLLMLoading] = useState(false);
   const [input, setInput] = useState("");
@@ -135,6 +120,7 @@ export default function ChatTab({
   const hasRunRef = useRef(false);
 
   useEffect(() => {
+    if (!chatReady) return;
     if (hasRunRef.current) return;
     if (messages.length > 0 || !showIdle) return;
 
@@ -144,7 +130,16 @@ export default function ChatTab({
       sendMessageWithoutText(idleMessage);
       setShowIdle(false);
     }, 40000);
-  }, [showIdle, messages.length]);
+  }, [chatReady, showIdle, messages.length]);
+
+  useEffect(() => {
+    const hasUserMessage = messages.some((m) => m.role === Role.ARTIST);
+    if (hasUserMessage && timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+      setShowIdle(false);
+    }
+  }, [messages]);
 
   const sendMessageWithoutText = async (messageContent?: string) => {
     const content = messageContent || input;
@@ -326,25 +321,22 @@ export default function ChatTab({
           />
 
           {/* Show prompt suggestions only if no messages have been sent yet */}
-          {messages.length == 0 &&
-            !hasUsedFirstPrompt &&
-            !isLLMLoading &&
-            !(stage === "WRITE" && condition === "SPARK") && (
-              <div className="mt-4 space-y-2">
-                <p className="text-sm text-gray-600 mb-3">Try asking me:</p>
-                <div className="flex flex-wrap gap-2">
-                  {promptSuggestions.map((prompt, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handlePromptSelection(prompt)}
-                      className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-300 transition-colors duration-200 text-left"
-                    >
-                      {prompt}
-                    </button>
-                  ))}
-                </div>
+          {messages.length == 0 && !hasUsedFirstPrompt && !isLLMLoading && (
+            <div className="mt-4 space-y-2">
+              <p className="text-sm text-gray-600 mb-3">Try asking me:</p>
+              <div className="flex flex-wrap gap-2">
+                {promptSuggestions.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handlePromptSelection(prompt)}
+                    className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-300 transition-colors duration-200 text-left"
+                  >
+                    {prompt}
+                  </button>
+                ))}
               </div>
-            )}
+            </div>
+          )}
         </div>
 
         {messages.map((msg) => (
@@ -353,8 +345,8 @@ export default function ChatTab({
             className={`py-2 prose prose-slate rounded-lg transition-all w-max max-w-full duration-300 ease-out opacity-0 translate-y-2 animate-fade-in 
             ${
               msg.role === Role.ARTIST
-                ? "px-4 text-main-dark bg-dark-grey bg-opacity-90 text-white justify-self-end self-end text-right "
-                : "self-start text-main text-left"
+                ? "px-4 text-main-dark bg-dark-grey bg-opacity-90 text-white ml-auto text-right "
+                : "mr-auto text-main text-left"
             }`}
           >
             <ReactMarkdown children={msg.content} remarkPlugins={[remarkGfm]} />
@@ -386,7 +378,7 @@ export default function ChatTab({
       </div>
 
       {/* Input area */}
-      {!(condition === "SPARK" && stage === "WRITE") && (
+      {
         <div className="p-3">
           <form
             onSubmit={(e) => {
@@ -410,7 +402,7 @@ export default function ChatTab({
             The Blackout Poetry Partner can make mistakes.
           </p>
         </div>
-      )}
+      }
     </div>
   );
 }

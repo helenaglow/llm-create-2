@@ -25,7 +25,7 @@ function PoemPageTemplate({
     >
       <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 md:gap-x-16 overflow-scroll md:overflow-hidden">
         {poem ? (
-          <div className="content-center  pb-4 h-max md:h-[70vh] text-center leading-relaxed flex flex-wrap bg-white rounded-xl">
+          <div className="content-center pb-4 h-max md:h-[70vh] text-center leading-relaxed flex flex-wrap bg-white rounded-xl">
             <div className="w-max justify-center h-max text-center leading-relaxed flex flex-wrap p-8 bg-white border rounded-xl overflow-auto">
               <div className="w-full text-h2 mb-4 flex flex-row items-center justify-items-center">
                 <div className="w-6 h-6 mr-2">

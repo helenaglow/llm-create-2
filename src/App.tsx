@@ -27,6 +27,7 @@ import { nanoid } from "nanoid";
 // import AudienceTransitionStep2 from "./pages/audience/step2/TransitionStep2";
 // import AudiencePostSurvey from "./pages/audience/PostSurvey";
 import LLMInstruction from "./pages/artist/instructions/llmInstructions";
+import ArtistTutorial from "./pages/artist/tutorial/Tutorial";
 import { useState, createContext, useEffect, useRef } from "react";
 import type {
   UserData,
@@ -265,6 +266,7 @@ function App() {
                     path="/artist/step-1"
                     element={<ArtistTransitionStep1 />}
                   />
+                  <Route path="/artist/tutorial" element={<ArtistTutorial />} />
                   <Route path="/artist/brainstorm" element={<ArtistStep1 />} />
                   <Route
                     path="/artist/step-2"
