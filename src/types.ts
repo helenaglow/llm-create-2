@@ -52,10 +52,8 @@ export const Stage = {
 export type Stage = (typeof Stage)[keyof typeof Stage];
 
 export const ArtistCondition = {
-  CONTROL: "CONTROL",
-  SPARK: "SPARK",
-  WRITING: "WRITING",
-  TOTAL_ACCESS: "TOTAL_ACCESS",
+  NO_AI: "NO_AI",
+  LLM: "LLM",
 } as const;
 export type ArtistCondition =
   (typeof ArtistCondition)[keyof typeof ArtistCondition];

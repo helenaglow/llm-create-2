@@ -50,17 +50,17 @@ const PoemViewer: React.FC = () => {
         </select>
 
         {/* Poem */}
-        <div className="max-w-3xl text-center leading-relaxed flex flex-wrap">
+        <div className="flex mx-auto flex-wrap select-none w-[350px] min-w-[350px] md:min-w-[400ox] md:w-[400px] h-max ">
           {words.map((word, i) => {
             const isVisible = visibleIndexes.includes(i);
             return (
               <span
                 key={i}
-                className={`px-1 transition duration-200 ${
+                className={`text-sm font-serif transition duration-300 tracking-[0] antialiased [font-optical-sizing:none] [font-variation-settings:'opsz'_0] [text-rendering:geometricPrecision]  ${
                   isVisible ? "text-black" : "text-transparent bg-black"
                 }`}
               >
-                {word + " "}
+                {word + "\u00A0"}
               </span>
             );
           })}

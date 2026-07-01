@@ -22,11 +22,12 @@ router.post("/autosave", async (req, res) => {
       1: "captcha",
       2: "consent",
       3: "pre-survey",
-      4: "brainstorm-instructions",
-      5: "brainstorm",
-      6: "write",
-      7: "post-survey",
-      8: "thank-you",
+      4: "instructions",
+      5: "tutorial",
+      6: "brainstorm",
+      7: "write",
+      8: "post-survey",
+      9: "thank-you",
     };
 
     const status = data.data?.timeStamps

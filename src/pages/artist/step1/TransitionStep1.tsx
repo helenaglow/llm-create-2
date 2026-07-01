@@ -22,7 +22,7 @@ const ArtistTransitionStep1 = () => {
     addRoleSpecificData({
       timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
     });
-    if (condition == "CONTROL" || condition == "WRITING") {
+    if (condition == "NO_AI") {
       navigate("/artist/brainstorm");
     } else {
       navigate("/artist/assistant-instructions");

@@ -566,7 +566,7 @@ export const ArtistPostSurveyQuestions: SurveyDefinition = {
     {
       id: "section7",
       title: "AI Assistance",
-      conditions: ["SPARK", "TOTAL_ACCESS", "WRITING"],
+      conditions: ["LLM"],
       questions: [
         {
           id: "q20",

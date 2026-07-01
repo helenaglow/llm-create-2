@@ -16,17 +16,12 @@ const ArtistTransitionStep2 = () => {
   }
 
   const { userData, addRoleSpecificData } = context;
-  const condition = userData?.data.condition;
 
   const handleSubmit = () => {
     addRoleSpecificData({
       timeStamps: [...(userData?.data?.timeStamps ?? []), new Date()],
     });
-    if (condition == "WRITING") {
-      navigate("/artist/assistant-instructions");
-    } else {
-      navigate("/artist/blackout");
-    }
+    navigate("/artist/blackout");
   };
 
   return (

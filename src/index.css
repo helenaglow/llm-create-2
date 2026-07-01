@@ -30,6 +30,10 @@
     @apply text-h1 text-white;
   }
 
+  .text-h5 {
+    @apply text-base md:text-lg text-left font-sans text-dark-grey;
+  }
+
   .text-main {
     @apply text-sm md:text-base text-left font-sans text-dark-grey;
   }

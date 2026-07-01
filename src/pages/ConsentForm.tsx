@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { DataContext } from "../App";
 import { toaster } from "../components/ui/toaster";
 
+//import { Image } from "@chakra-ui/react";
+
 const ConsentForm = () => {
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
@@ -144,6 +146,7 @@ const ConsentForm = () => {
             </li>
           </ul>
         </div>
+
         <div className="w-full h-max flex justify-center py-8">
           <Checkbox.Root
             defaultChecked
