@@ -44,6 +44,22 @@ const ArtistInstructions = () => {
           className="w-full lg:w-4/5 self-center"
         />
 
+        <p className="text-main">
+          {" "}
+          We are focusing here on the process of writing rather than the result,
+          so be sure to take time to understand and explore the source material,
+          as well as your own holistic approach.
+        </p>
+
+        <p className="text-main">
+          {" "}
+          <strong>
+            Don’t worry if you don’t have much experience with blackout poetry,
+            we will guide you through the exercise.
+          </strong>{" "}
+          The most important thing is to be curious about what you can create!
+        </p>
+
         {/* Steps */}
         <div className="space-y-3">
           <p className="text-main ">The task has three steps:</p>
@@ -90,22 +106,6 @@ const ArtistInstructions = () => {
             </div>
           ))}
         </div>
-
-        <p className="text-main">
-          {" "}
-          We are focusing here on the process of writing rather than the result,
-          so be sure to take time to understand and explore the source material,
-          as well as your own holistic approach.
-        </p>
-
-        <p className="text-main">
-          {" "}
-          <strong>
-            Don’t worry if you don’t have much experience with blackout poetry,
-            we will guide you through the exercise.
-          </strong>{" "}
-          The most important thing is to be curious about what you can create!
-        </p>
 
         <hr className="border-light-grey-2" />
 
