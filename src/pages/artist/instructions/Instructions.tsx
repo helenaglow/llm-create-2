@@ -34,7 +34,7 @@ const ArtistInstructions = () => {
         {/* Intro */}
         <p className="text-main">
           In this study you will create a <strong>blackout poem</strong>. A
-          blackout poem is a type of poem poem made by selecting words from an
+          blackout poem is a type of poem made by selecting words from an
           existing passage of text.
         </p>
 
@@ -43,16 +43,6 @@ const ArtistInstructions = () => {
           src={BlackoutExample}
           className="w-full lg:w-4/5 self-center"
         />
-
-        <p className="text-main">
-          {" "}
-          We are focusing here on the process of writing rather than the result,
-          so be sure to take time to understand and explore the source material,
-          as well as your own holistic approach. Don’t worry if you don’t have
-          much experience with blackout poetry, we will guide you through the
-          exercise. The most important thing is to be curious about what you can
-          create!
-        </p>
 
         {/* Steps */}
         <div className="space-y-3">
@@ -100,6 +90,22 @@ const ArtistInstructions = () => {
             </div>
           ))}
         </div>
+
+        <p className="text-main">
+          {" "}
+          We are focusing here on the process of writing rather than the result,
+          so be sure to take time to understand and explore the source material,
+          as well as your own holistic approach.
+        </p>
+
+        <p className="text-main">
+          {" "}
+          <strong>
+            Don’t worry if you don’t have much experience with blackout poetry,
+            we will guide you through the exercise.
+          </strong>{" "}
+          The most important thing is to be curious about what you can create!
+        </p>
 
         <hr className="border-light-grey-2" />
 
